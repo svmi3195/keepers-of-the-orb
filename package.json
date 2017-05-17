@@ -1,0 +1,22 @@
+{
+  "name": "keepers-of-the-orb",
+  "version": "1.0.0",
+  "description": "html5 game",
+  "main": "./development/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svmi3195/keepers-of-the-orb.git"
+  },
+  "author": "svmi3195",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/svmi3195/keepers-of-the-orb/issues"
+  },
+  "homepage": "https://github.com/svmi3195/keepers-of-the-orb#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
