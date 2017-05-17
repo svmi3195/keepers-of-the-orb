@@ -1,0 +1,1 @@
+function runGame(){var n=document.getElementById("game");n.getContext("2d");n.width=window.innerWidth,n.height=window.innerHeight-4}document.addEventListener("DOMContentLoaded",function(){runGame()});
