@@ -13,20 +13,24 @@ function runGame(){
     map.render();
 
     document.addEventListener('keypress', function(e){
-        //console.log(e.keyCode)
-        switch (e.keyCode){
+        //console.log(e.which)
+
+        switch (e.which){
             case 114: //r
                 map.render();
                 break;
             case 103: //g
                 map.renderGrid();
                 break;
+            case 116: //t
+                map.renderTexture('sand');
+                break;
         }
     });//keyboard shortcuts
 
 };//end of runGame
 
-function Tilemap(canvas, contex) {    
+function Tilemap(canvas, context) {    
     this.tsize = 40; //tile size (40 x 40)
     this.cols = Math.ceil(canvas.width / this.tsize);
     this.rows = Math.ceil(canvas.height / this.tsize);
@@ -38,12 +42,15 @@ function Tilemap(canvas, contex) {
         return this.tiles[row * this.cols + col]
     };
     this.render = function(){
+
+        var sand = document.getElementById('sand');
+
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
-                if (tile == 0) {
-                    contex.fillStyle = 'green';   
-                    contex.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);       
+                if (tile == 0) {                    
+                    context.fillStyle = 'green';   
+                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);                    
                 }
             }
         }
@@ -53,10 +60,23 @@ function Tilemap(canvas, contex) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
                 if (tile == 0) {
-                    contex.strokeStyle = 'white';
-                    contex.strokeRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);        
+                    context.strokeStyle = 'white';
+                    context.strokeRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);        
                 }
             }
         }
-    }
+    };// end of Tilemap render grid
+    this.renderTexture = function(texture){
+        var texture = document.getElementById(texture);
+
+        for (var c = 0; c < this.cols; c++) {
+            for (var r = 0; r < this.rows; r++) {
+                var tile = this.getTile(c, r);
+                if (tile == 0) {
+                    context.drawImage(texture, c * this.tsize, r * this.tsize);
+                }
+            }
+        }
+    };//end of Tilemap render texture
+
 };//end of Tilemap

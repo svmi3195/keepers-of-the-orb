@@ -1,9 +1,8 @@
 * {
     margin: 0;
     padding: 0;
-    background-color: dodgerblue;
 }
 
-canvas{
-    background-color: dodgerblue;
+body{
+    overflow: hidden;
 }
