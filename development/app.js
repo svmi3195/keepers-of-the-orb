@@ -14,7 +14,7 @@ function runGame(){
 
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
-
+        
         switch (e.which){
             case 114: //r
                 map.render();
@@ -23,7 +23,7 @@ function runGame(){
                 map.renderGrid();
                 break;
             case 116: //t
-                map.renderTexture('sand');
+                map.renderTexture('grass-');
                 break;
         }
     });//keyboard shortcuts
@@ -42,8 +42,6 @@ function Tilemap(canvas, context) {
         return this.tiles[row * this.cols + col]
     };
     this.render = function(){
-
-        var sand = document.getElementById('sand');
 
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
@@ -66,14 +64,22 @@ function Tilemap(canvas, context) {
             }
         }
     };// end of Tilemap render grid
-    this.renderTexture = function(texture){
-        var texture = document.getElementById(texture);
+    this.renderTexture = function(t){
+
+        var textures = [];
+
+        if(t == 'grass-'){            
+            for(var i = 1; i <= 7; i++){
+                textures.push(document.getElementById((t + i)));
+            }
+        } 
+     
 
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
                 if (tile == 0) {
-                    context.drawImage(texture, c * this.tsize, r * this.tsize);
+                    context.drawImage(textures[Math.floor(Math.random() * textures.length)], c * this.tsize, r * this.tsize);
                 }
             }
         }
