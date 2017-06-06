@@ -5,3 +5,5 @@ Keyboard shortcuts
 * r - render map
 * g - render grid
 * t - render texture
+
+For testing just open ./test/index.html
