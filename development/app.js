@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
     runGame();
 });
 
+function test(){
+    return 1;
+};
+
 function runGame(){
 
     var canvas = document.getElementById('game');
