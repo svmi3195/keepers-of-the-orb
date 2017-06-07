@@ -12,6 +12,9 @@ function runGame(){
     var map = new Tilemap(canvas, ctx);
     map.render();
 
+    var enemy = new Enemy(ctx, [0, Math.floor(map.rows/2)]);
+    enemy.render();
+
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
         
@@ -94,3 +97,16 @@ function Tilemap(canvas, context) {
     };//end of randomize map
 
 };//end of Tilemap
+
+function Enemy (context, spawnTile){
+    this.hitpoints = 100;
+    this.x = spawnTile[0];
+    this.y = spawnTile[1];
+
+    this.render = function(){
+        var radius = 20;
+        context.fillStyle = 'red';
+        context.arc((this.x + (40 / 2)), (this.y + (40 / 2)), radius, 0, 2 * Math.PI, true);
+        context.fill();
+    }
+};
