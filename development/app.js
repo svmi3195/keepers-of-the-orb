@@ -10,9 +10,10 @@ function runGame(){
     canvas.height = window.innerHeight;
 
     var map = new Tilemap(canvas, ctx);
-    map.render();
+    map.randomize();
+    //map.render();
 
-    var enemy = new Enemy(ctx, [0, Math.floor(map.rows/2)]);
+    var enemy = new Enemy(ctx, [0, Math.floor(map.rows/2) * map.tsize]);
     enemy.render();
 
     document.addEventListener('keypress', function(e){
@@ -20,7 +21,7 @@ function runGame(){
         
         switch (e.which){
             case 114: //r
-                map.randomizeMap();
+                map.randomize();
                 map.render();
                 break;
             case 103: //g
@@ -29,7 +30,22 @@ function runGame(){
         }
     });//keyboard shortcuts
 
+    gameLoop();
+
+    function gameLoop(){
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        enemy.moveX();
+
+        map.render();
+        enemy.render();
+
+        requestAnimationFrame(gameLoop);
+    };
+
 };//end of runGame
+
+
 
 function Tilemap(canvas, context) {    
     this.tsize = 40; //tile size (40 x 40)
@@ -58,7 +74,7 @@ function Tilemap(canvas, context) {
                     context.fillStyle = 'green';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);                    
                 }else if (tile == 2){
-                    context.drawImage(this.textures[Math.floor(Math.random() * this.textures.length)], c * this.tsize, r * this.tsize);
+                    context.drawImage(this.textures[0], c * this.tsize, r * this.tsize);
                 }else if (tile == 3){
                     context.fillStyle = 'gray';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
@@ -80,7 +96,7 @@ function Tilemap(canvas, context) {
         this.tiles[row * this.cols + col] = value;
     }
 
-    this.randomizeMap = function(){
+    this.randomize = function(){
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 if(c == 0 && r == Math.floor(this.rows/2)){ //entrance
@@ -98,15 +114,20 @@ function Tilemap(canvas, context) {
 
 };//end of Tilemap
 
-function Enemy (context, spawnTile){
+function Enemy (context, spawnPoint){
     this.hitpoints = 100;
-    this.x = spawnTile[0];
-    this.y = spawnTile[1];
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1];
 
     this.render = function(){
         var radius = 20;
         context.fillStyle = 'red';
         context.arc((this.x + (40 / 2)), (this.y + (40 / 2)), radius, 0, 2 * Math.PI, true);
         context.fill();
-    }
+    };
+
+    this.moveX = function(){
+        this.x++;
+    };
 };
+
