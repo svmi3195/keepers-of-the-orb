@@ -11,10 +11,8 @@ function runGame(){
 
     var map = new Tilemap(canvas, ctx);
     map.randomize();
-    //map.render();
 
-    var enemy = new Enemy(ctx, [0, Math.floor(map.rows/2) * map.tsize]);
-    enemy.render();
+    var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
@@ -35,10 +33,10 @@ function runGame(){
     function gameLoop(){
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        enemy.moveX();
-
+        
         map.render();
-        enemy.render();
+        enemy.render(ctx);
+        enemy.moveX();
 
         requestAnimationFrame(gameLoop);
     };
@@ -114,16 +112,14 @@ function Tilemap(canvas, context) {
 
 };//end of Tilemap
 
-function Enemy (context, spawnPoint){
+function Enemy (spawnPoint){
     this.hitpoints = 100;
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
+    this.texture = document.getElementById('enemy-1');
 
-    this.render = function(){
-        var radius = 20;
-        context.fillStyle = 'red';
-        context.arc((this.x + (40 / 2)), (this.y + (40 / 2)), radius, 0, 2 * Math.PI, true);
-        context.fill();
+    this.render = function(context){
+        context.drawImage(this.texture, this.x, this.y);
     };
 
     this.moveX = function(){
