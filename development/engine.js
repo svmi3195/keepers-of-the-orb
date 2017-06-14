@@ -4,9 +4,24 @@ function Tile(index, cols, rows){
    this.f = 0;
    this.g = 0;
    this.h = 0;
-   this.neighbors = [index - 1, index + 1, index - cols, index + cols].filter(function(x){
-     return x > 0 && x < cols * rows;
-   })
+   this.previous = undefined;
+   //[index - 1, index + 1, index - cols , index + cols] - without diagonals
+   //[index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1] - diagonals
+   this.neighbors = [index - 1, index + 1, index - cols, index + cols, index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1].filter(function(x){
+     //start and end checker
+     if(x >= 0 && x < cols * rows){ 
+       //left edge checker
+       if(this.index % cols == 0 && (x == this.index - 1 || x == this.index - cols - 1 || x == this.index + cols - 1)){ 
+          return false;
+       }
+       //right edge checker
+       if((this.index + 1) % cols == 0 && (x == this.index + 1 || x == this.index - cols + 1 || x == this.index + cols + 1)){ 
+          return false;
+       }       
+       return true;
+     }
+     return false;  
+   }, this);
 };
 
 function Tilemap(canvas, context) {    
@@ -97,53 +112,105 @@ function removeFromArray(array, element){
   }
 }
 
+function heuristic(point1, point2){
+  var a = point1[0] - point2[0];
+  var b = point1[1] - point2[1];
+  
+  //euclidian distance
+  var distance = Math.sqrt( a*a + b*b );
+  //manhattan distance
+  //var distance = Math.abs(a) + Math.abs(b);
+  return distance; 
+}
+
 function findPath(start, goal){
-  //grid equals map.tiles
-  //map.update(0, 0, 2); //makes start red
-  //map.update(map.cols - 1, map.rows - 1, 2); //makes end red
+  var path = [];
   var openList = [];
   var closedList = [];
-  if(!start){start = [0,0]}
-  if(!goal){goal = [map.cols - 1, map.rows - 1]}
-  
+  if(!start){start = 0}
+  if(!goal){goal = map.tiles.length -1}
+    
   openList.push(start);
   
-  if(openList.length > 0){
-    var winner = 0;
-    for(var i = 0; i < openList.length; i++){
-      if(map.tiles[transIndex(openList[i])].f < map.tiles[transIndex(openList[winner])].f){
-        winner = i;
+  var done = false;
+  var iteration = 0;
+  
+  while(!done){
+    iteration++;
+    if(openList.length > 0){
+      var winner = 0;
+      for(var i = 0; i < openList.length; i++){
+        if(map.tiles[openList[i]].f < map.tiles[openList[winner]].f){
+          winner = i;
+        }
       }
-    }
-    var current = openList[winner];
-    
-    if(transIndex(current) == transIndex(goal)){
-      //console.log('done!')
-    }
-    
-    removeFromArray(openList, current);
-    closedList.push(current);
-    
-    //console.log(map.tiles[transIndex(current)].neighbors)
-    
-    var neighbors = map.tiles[transIndex(current)].neighbors;
-    //console.log(neighbors)
-    for(var nb = 0; nb < neighbors.length; nb++){
-      //var neighbor = neighbors[nb];
-    }
+      var current = openList[winner];
+      
+      if(current == goal){
+        done = true;
+        console.log('Done!');
+        path.push(start);
+        var temp = current;
+        path.push(temp);
+        while(map.tiles[temp].previous){
+          path.push(map.tiles[temp].previous);
+          temp = map.tiles[temp].previous;
+        }
+      }
+
+      removeFromArray(openList, current);
+      closedList.push(current);
+
+      var neighbors = map.tiles[current].neighbors;
+      for(var nb = 0; nb < neighbors.length; nb++){
+        var neighbor = neighbors[nb];
+
+        if(!closedList.includes(neighbor) && map.tiles[neighbor].num != 1){
+           var tempG = map.tiles[current].g + 1;
+          
+          var newPath = false;
+          if(openList.includes(neighbor)){
+            if(tempG < map.tiles[neighbor].g){
+              map.tiles[neighbor].g = tempG;
+              newPath = true;
+            }          
+          }else{
+            map.tiles[neighbor].g = tempG;
+            newPath = true;
+            openList.push(neighbor);
+          }
+          
+          if(newPath){
+            map.tiles[neighbor].h = heuristic(transIndex2(neighbor), transIndex2(goal));
+            map.tiles[neighbor].f = map.tiles[neighbor].g + map.tiles[neighbor].h;
+            map.tiles[neighbor].previous = current;
+          }
+        }
+      }
     
   }else{
     //no solution
+    done = true;
+    return undefined;
   }
   
   //visualize:
   //draw openList tiles as green
   //and closedList tiles as red
+  //and path as blue
   for(var o = 0; o < openList.length; o++){
-    map.tiles[transIndex(openList[o])].num = 2;
+    map.tiles[openList[o]].num = 2;
   }
   for(var c = 0; c < closedList.length; c++){
-    map.tiles[transIndex(closedList[c])].num = 3;
+    map.tiles[closedList[c]].num = 3;
+  }
+  for(var p = 0; p < path.length; p++){
+      map.tiles[path[p]].num = 4;
   }
   
+  }
+  
+  return path;
 }//end of findPath
+
+
