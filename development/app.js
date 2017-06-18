@@ -11,6 +11,8 @@ function runGame(){
 
     var map = new Tilemap(canvas, ctx);
     map.randomize();
+    //findPath(map, transIndex([0, Math.floor(map.rows/2) * map.cols], map), transIndex([0, Math.floor(map.rows/2) * map.cols], map));
+    findPath(map, transIndex([0,Math.floor(map.rows/2)], map), transIndex([map.cols - 3, Math.floor(map.rows/2)], map));
 
     var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 

@@ -47,13 +47,13 @@ function Tilemap(canvas, context) {
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
-                if (tile.num == 1) {                    
-                    context.fillStyle = 'green';   
-                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);                    
-                }else if (tile.num == 2){
+                if (tile.num == 0) {
                     context.drawImage(this.textures[0], c * this.tsize, r * this.tsize);
-                }else if (tile.num == 3){
-                    context.fillStyle = 'gray';   
+                }else if (tile.num == 1){
+                    context.fillStyle = '#0d0d0d';   
+                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
+                }else if (tile.num == 2){
+                    context.fillStyle = 'blue';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }
             }
@@ -77,14 +77,10 @@ function Tilemap(canvas, context) {
     this.randomize = function(){
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
-                if(c == 0 && r == Math.floor(this.rows/2)){ //entrance
+                if(Math.random() < 0.2){    
                     this.update(c, r, 1);
-                }else if(c == this.cols - 3 && r == Math.floor(this.rows/2)){ //orb
-                    this.update(c, r, 1);
-                }else if(Math.random() < 0.1){
-                    this.update(c, r, 3);
                 }else{
-                    this.update(c, r, 2);
+                    this.update(c, r, 0);
                 }
             }
         }
@@ -95,13 +91,16 @@ function Tilemap(canvas, context) {
 //PATHFINDER (work in progress)
 //https://codepen.io/svmi3195/pen/gRrBBJ
 
-var map = new Tilemap(); //change later to be pathfinder argument
-
 //transforms index of 2d array to index of 1d array
-function transIndex(arr){
-  //arr[0] - cols
-  //arr[1] - rows
-  return arr[0] * map.cols + arr[1];
+function transIndex(arr, map){
+  //arr[0] - x
+  //arr[1] - y
+  return arr[1] * map.cols + arr[0];
+}
+
+//transforms index of 1d array to index of 2d array
+function transIndex2(index, map){
+  return [index % map.cols, Math.floor(index / map.cols)]
 }
 
 function removeFromArray(array, element){
@@ -123,7 +122,7 @@ function heuristic(point1, point2){
   return distance; 
 }
 
-function findPath(start, goal){
+function findPath(map, start, goal){
   var path = [];
   var openList = [];
   var closedList = [];
@@ -181,7 +180,7 @@ function findPath(start, goal){
           }
           
           if(newPath){
-            map.tiles[neighbor].h = heuristic(transIndex2(neighbor), transIndex2(goal));
+            map.tiles[neighbor].h = heuristic(transIndex2(neighbor, map), transIndex2(goal, map));
             map.tiles[neighbor].f = map.tiles[neighbor].g + map.tiles[neighbor].h;
             map.tiles[neighbor].previous = current;
           }
@@ -194,18 +193,9 @@ function findPath(start, goal){
     return undefined;
   }
   
-  //visualize:
-  //draw openList tiles as green
-  //and closedList tiles as red
-  //and path as blue
-  for(var o = 0; o < openList.length; o++){
-    map.tiles[openList[o]].num = 2;
-  }
-  for(var c = 0; c < closedList.length; c++){
-    map.tiles[closedList[c]].num = 3;
-  }
+  //visualize path with blue rects:  
   for(var p = 0; p < path.length; p++){
-      map.tiles[path[p]].num = 4;
+      map.tiles[path[p]].num = 2;
   }
   
   }
