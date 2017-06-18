@@ -7,15 +7,18 @@ function Tile(index, cols, rows){
    this.previous = undefined;
    //[index - 1, index + 1, index - cols , index + cols] - without diagonals
    //[index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1] - diagonals
-   this.neighbors = [index - 1, index + 1, index - cols, index + cols, index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1].filter(function(x){
+   //[index - 1, index + 1, index - cols, index + cols, index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1] - all
+   this.neighbors = [index - 1, index + 1, index - cols, index + cols].filter(function(x){
      //start and end checker
      if(x >= 0 && x < cols * rows){ 
        //left edge checker
-       if(this.index % cols == 0 && (x == this.index - 1 || x == this.index - cols - 1 || x == this.index + cols - 1)){ 
+	   //diagonals: if(this.index % cols == 0 && (x == this.index - 1 || x == this.index - cols - 1 || x == this.index + cols - 1))
+       if(this.index % cols == 0 && x == this.index - 1){ 
           return false;
        }
        //right edge checker
-       if((this.index + 1) % cols == 0 && (x == this.index + 1 || x == this.index - cols + 1 || x == this.index + cols + 1)){ 
+	   //diagonals: if((this.index + 1) % cols == 0 && (x == this.index + 1 || x == this.index - cols + 1 || x == this.index + cols + 1))
+       if((this.index + 1) % cols == 0 && x == this.index + 1){ 
           return false;
        }       
        return true;
