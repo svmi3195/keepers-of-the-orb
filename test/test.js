@@ -43,6 +43,25 @@ describe('Keepers of the Orb', function() {
 
     });//end of Enemy tests
 
+    describe('Pathfinder', function(){
+
+        var map = new Tilemap(canvas, ctx);
+        map.randomize();
+        findPath(map);
+        it('after pathfinder run tiles properties are back to initial values', function(){
+            for(var i = 0; i < map.tiles.length; i++){
+                assert.equal(
+                    map.tiles[i].f == 0 &&
+                    map.tiles[i].g == 0 &&
+                    map.tiles[i].h == 0 &&
+                    map.tiles[i].previous == undefined
+                , true);
+            }
+            
+        })
+
+        
+    })
   
 });
 

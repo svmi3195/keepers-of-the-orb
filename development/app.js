@@ -39,7 +39,8 @@ function runGame(){
         var x = event.clientX;
         var y = event.clientY;
         //console.log(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));
-        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map)); 
+        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));
+        console.log(map); 
     };//end of mouse getClickedTile
 
     gameLoop();

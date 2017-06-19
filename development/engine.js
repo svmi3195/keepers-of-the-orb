@@ -211,23 +211,25 @@ function findPath(map, start, goal){
     pathfinderCleanUp(map);
     return undefined;
   }
-  
+
+    
   //visualize path with blue rects:  
   for(var p = 0; p < path.length; p++){
       map.tiles[path[p]].num = 2;
   }
   
   }
+  
   pathfinderCleanUp(map);
   return path;
 };//end of findPath
 
 function pathfinderCleanUp(map){
   for(var i = 0; i < map.tiles; i++){    
-   map.tiles[i].f = 0;
-   map.tiles[i].g = 0;
-   map.tiles[i].h = 0;
-   map.tiles[i].previous = undefined;
+    map.tiles[i].f = 0;
+    map.tiles[i].g = 0;
+    map.tiles[i].h = 0;
+    map.tiles[i].previous = undefined;
   }
 }
 
