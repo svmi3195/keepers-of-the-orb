@@ -208,6 +208,7 @@ function findPath(map, start, goal){
   }else{
     //no solution
     done = true;
+    pathfinderCleanUp(map);
     return undefined;
   }
   
@@ -217,8 +218,17 @@ function findPath(map, start, goal){
   }
   
   }
-  
+  pathfinderCleanUp(map);
   return path;
-}//end of findPath
+};//end of findPath
+
+function pathfinderCleanUp(map){
+  for(var i = 0; i < map.tiles; i++){    
+   map.tiles[i].f = 0;
+   map.tiles[i].g = 0;
+   map.tiles[i].h = 0;
+   map.tiles[i].previous = undefined;
+  }
+}
 
 
