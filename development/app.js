@@ -11,11 +11,12 @@ function runGame(){
 
     var map = new Tilemap(canvas, ctx);
     map.randomize();
-    //findPath(map, transIndex([0, Math.floor(map.rows/2) * map.cols], map), transIndex([0, Math.floor(map.rows/2) * map.cols], map));
-    findPath(map, transIndex([0,Math.floor(map.rows/2)], map), transIndex([map.cols - 3, Math.floor(map.rows/2)], map));
+    //findPath(map, transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map), transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map));
+    //findPath(map, transIndex2to1([0,Math.floor(map.rows/2)], map), transIndex2to1([map.cols - 3, Math.floor(map.rows/2)], map));
 
     var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 
+    //keyboard shortcuts
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
         
@@ -30,9 +31,25 @@ function runGame(){
         }
     });//keyboard shortcuts
 
+    var clicked = [];
+    //mouseclick event
+    canvas.addEventListener("mousedown", getClickedTile, false);
+
+    function getClickedTile(event){
+        var x = event.clientX;
+        var y = event.clientY;
+        //console.log(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));
+        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map)); 
+    };//end of mouse getClickedTile
+
     gameLoop();
 
     function gameLoop(){
+
+        if(clicked.length == 2){
+            findPath(map, clicked[0], clicked[1]);
+            clicked = [];
+        }
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         

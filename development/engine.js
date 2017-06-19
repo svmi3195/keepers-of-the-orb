@@ -106,18 +106,18 @@ function Tilemap(canvas, context) {
 
 };//end of Tilemap
 
-//PATHFINDER (work in progress)
+//PATHFINDER
 //https://codepen.io/svmi3195/pen/gRrBBJ
 
 //transforms index of 2d array to index of 1d array
-function transIndex(arr, map){
+function transIndex2to1(arr, map){
   //arr[0] - x
   //arr[1] - y
   return arr[1] * map.cols + arr[0];
 }
 
 //transforms index of 1d array to index of 2d array
-function transIndex2(index, map){
+function transIndex1to2(index, map){
   return [index % map.cols, Math.floor(index / map.cols)]
 }
 
@@ -198,7 +198,7 @@ function findPath(map, start, goal){
           }
           
           if(newPath){
-            map.tiles[neighbor].h = heuristic(transIndex2(neighbor, map), transIndex2(goal, map));
+            map.tiles[neighbor].h = heuristic(transIndex1to2(neighbor, map), transIndex1to2(goal, map));
             map.tiles[neighbor].f = map.tiles[neighbor].g + map.tiles[neighbor].h;
             map.tiles[neighbor].previous = current;
           }
