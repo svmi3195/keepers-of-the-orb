@@ -225,7 +225,7 @@ function findPath(map, start, goal){
 };//end of findPath
 
 function pathfinderCleanUp(map){
-  for(var i = 0; i < map.tiles; i++){    
+  for(var i = 0; i < map.tiles.length; i++){    
     map.tiles[i].f = 0;
     map.tiles[i].g = 0;
     map.tiles[i].h = 0;
