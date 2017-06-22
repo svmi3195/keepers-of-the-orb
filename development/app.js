@@ -16,6 +16,8 @@ function runGame(){
 
     var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 
+    var mage = new Mage([5 * 40, 5 * 40]);
+
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
@@ -57,6 +59,8 @@ function runGame(){
         map.render();
         enemy.render(ctx);
         enemy.moveX();
+
+        mage.render(ctx);
 
         requestAnimationFrame(gameLoop);
     };
