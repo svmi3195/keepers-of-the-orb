@@ -49,7 +49,7 @@ function runGame(){
 
         if(clicked.length == 2){
             findPath(map, clicked[0], clicked[1]);
-            clicked = [];
+            clicked.shift();
         }
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);

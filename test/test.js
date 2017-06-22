@@ -33,13 +33,9 @@ describe('Keepers of the Orb', function() {
 
         var enemy = new Enemy(ctx, [0, 0]);
 
-        it('enemy is not empty object', function(){
+        it('enemy is not an empty object', function(){
             assert.equal(typeof enemy == 'object' && Object.getOwnPropertyNames(enemy).length > 0, true);
-        });
-
-        it('x and y of enemy are positive integers or zero', function(){
-            assert.equal(Math.floor(enemy.x) == enemy.x && Math.floor(enemy.y) == enemy.y && enemy.x >= 0 && enemy.y >= 0, true);
-        });
+        });        
 
     });//end of Enemy tests
 
@@ -48,7 +44,7 @@ describe('Keepers of the Orb', function() {
         var map = new Tilemap(canvas, ctx);
         map.randomize();
         findPath(map);
-        it('after pathfinder run tiles properties are back to initial values', function(){
+        it('after pathfinder did run tiles properties are back to initial values', function(){
             for(var i = 0; i < map.tiles.length; i++){
                 assert.equal(
                     map.tiles[i].f == 0 &&
@@ -56,12 +52,9 @@ describe('Keepers of the Orb', function() {
                     map.tiles[i].h == 0 &&
                     map.tiles[i].previous == undefined
                 , true);
-            }
-            
-        })
-
-        
-    })
+            }            
+        });        
+    });//end of pathfinder tests
   
 });
 
