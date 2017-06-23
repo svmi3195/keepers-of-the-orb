@@ -1,10 +1,11 @@
 function Tile(index, cols, rows){
    this.index = index;
-   this.num = 0;
+   this.terrain = 'grass';
    this.f = 0;
    this.g = 0;
    this.h = 0;
    this.previous = undefined;
+   this.blocked = false;
    //[index - 1, index + 1, index - cols , index + cols] - without diagonals
    //[index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1] - diagonals
    //[index - 1, index + 1, index - cols, index + cols, index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1] - all
@@ -65,12 +66,12 @@ function Tilemap(canvas, context) {
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
-                if (tile.num == 0) {
+                if (tile.terrain == 'grass') {
                     context.drawImage(this.textures[0], c * this.tsize, r * this.tsize);
-                }else if (tile.num == 1){
+                }else if (tile.terrain == 'wall'){
                     context.fillStyle = '#0d0d0d';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
-                }else if (tile.num == 2){
+                }else if (tile.terrain == 'path'){
                     context.fillStyle = 'blue';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }
@@ -87,8 +88,11 @@ function Tilemap(canvas, context) {
         }
     };// end of Tilemap render grid
 
-    this.update = function(col, row, value){
-        this.tiles[row * this.cols + col].num = value;
+    this.update = function(col, row, strTerrain){
+        this.tiles[row * this.cols + col].terrain = strTerrain;
+        if(strTerrain == 'wall'){
+          this.tiles[row * this.cols + col].blocked = true;
+        }
     }
 
     //why do we even need cols and rows here? rewrite with tiles array!
@@ -96,9 +100,9 @@ function Tilemap(canvas, context) {
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
                 if(Math.random() < 0.2){    
-                    this.update(c, r, 1);
+                    this.update(c, r, 'wall');
                 }else{
-                    this.update(c, r, 0);
+                    this.update(c, r, 'grass');
                 }
             }
         }
@@ -134,9 +138,9 @@ function heuristic(point1, point2){
   var b = point1[1] - point2[1];
   
   //euclidian distance
-  var distance = Math.sqrt( a*a + b*b );
+  //var distance = Math.sqrt( a*a + b*b );
   //manhattan distance
-  //var distance = Math.abs(a) + Math.abs(b);
+  var distance = Math.abs(a) + Math.abs(b);
   return distance; 
 }
 
@@ -182,7 +186,7 @@ function findPath(map, start, goal){
       for(var nb = 0; nb < neighbors.length; nb++){
         var neighbor = neighbors[nb];
 
-        if(!closedList.includes(neighbor) && map.tiles[neighbor].num != 1){
+        if(!closedList.includes(neighbor) && map.tiles[neighbor].blocked === false){
            var tempG = map.tiles[current].g + 1;
           
           var newPath = false;
@@ -215,7 +219,7 @@ function findPath(map, start, goal){
     
   //visualize path with blue rects:  
   for(var p = 0; p < path.length; p++){
-      map.tiles[path[p]].num = 2;
+      map.tiles[path[p]].terrain = 'path';
   }
   
   }

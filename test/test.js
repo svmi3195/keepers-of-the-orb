@@ -27,6 +27,24 @@ describe('Keepers of the Orb', function() {
             assert.lengthOf(map.getTile, 2);
         });
 
+        map.randomize();
+
+        it('for wall tiles tile property blocked is true', function(){
+            for(var i = 0; i < map.tiles.length; i++){
+                    if(map.tiles[i].terrain == 'wall'){
+                        assert.equal(map.tiles[i].blocked === true, true);
+                    }
+            }
+        });
+
+        it('for grass tiles tile property blocked is false', function(){
+            for(var i = 0; i < map.tiles.length; i++){
+                    if(map.tiles[i].terrain == 'grass'){
+                        assert.equal(map.tiles[i].blocked === false, true);
+                    }
+            }
+        });
+
     });//end of Tilemap tests
 
     describe('Enemy', function(){
