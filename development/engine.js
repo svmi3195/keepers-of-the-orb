@@ -169,7 +169,6 @@ function findPath(map, start, goal){
       
       if(current == goal){
         done = true;
-        console.log('Done!');
         path.push(start);
         var temp = current;
         path.push(temp);

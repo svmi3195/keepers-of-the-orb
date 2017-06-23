@@ -14,9 +14,12 @@ function runGame(){
     //findPath(map, transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map), transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map));
     //findPath(map, transIndex2to1([0,Math.floor(map.rows/2)], map), transIndex2to1([map.cols - 3, Math.floor(map.rows/2)], map));
 
-    var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
+    var entrance = [0, Math.floor(map.rows/2) * map.tsize];
 
-    var mage = new Mage([5 * 40, 5 * 40]);
+    //var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
+
+    var mage = new Mage(entrance);
+    var magePath = [];
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -40,27 +43,46 @@ function runGame(){
     function getClickedTile(event){
         var x = event.clientX;
         var y = event.clientY;
-        //console.log(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));
-        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));
-        console.log(map); 
+        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));         
     };//end of mouse getClickedTile
 
     gameLoop();
 
     function gameLoop(){
 
+        
+
         if(clicked.length == 2){
-            findPath(map, clicked[0], clicked[1]);
+            magePath = findPath(map, clicked[0], clicked[1]);
+            magePath.shift();//prolly should not shift but fix pathfinder wtf it returns start at head and tail
             clicked.shift();
         }
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         map.render();
-        enemy.render(ctx);
-        enemy.moveX();
+        //enemy.render(ctx);
+        //enemy.moveX();
+
+        if(magePath.length > 0){
+            var mageStartX = transIndex1to2(magePath[magePath.length - 1], map)[0] * map.tsize;
+            if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + 1){
+                if(mage.x > mageStartX - 40){
+                    mage.moveLeft();
+                }else{
+                    magePath.pop();
+                }  
+            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - 1){
+                if(mage.x < mageStartX + 40){
+                    mage.moveRight();
+                }else{
+                    magePath.pop();
+                }
+            }
+        };
 
         mage.render(ctx);
+
 
         requestAnimationFrame(gameLoop);
     };
