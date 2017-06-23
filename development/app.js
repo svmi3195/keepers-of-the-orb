@@ -54,7 +54,7 @@ function runGame(){
 
         if(clicked.length == 2){
             magePath = findPath(map, clicked[0], clicked[1]);
-            magePath.shift();//prolly should not shift but fix pathfinder wtf it returns start at head and tail
+            magePath.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
             clicked.shift();
         }
         
@@ -66,6 +66,7 @@ function runGame(){
 
         if(magePath.length > 0){
             var mageStartX = transIndex1to2(magePath[magePath.length - 1], map)[0] * map.tsize;
+            var mageStartY = transIndex1to2(magePath[magePath.length - 1], map)[1] * map.tsize;
             if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + 1){
                 if(mage.x > mageStartX - 40){
                     mage.moveLeft();
@@ -75,6 +76,18 @@ function runGame(){
             }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - 1){
                 if(mage.x < mageStartX + 40){
                     mage.moveRight();
+                }else{
+                    magePath.pop();
+                }
+            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - map.cols){
+                if(mage.y < mageStartY + 40 - mage.tileOffsetY){
+                    mage.moveDown();
+                }else{
+                    magePath.pop();
+                }
+            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + map.cols){
+                if(mage.y > mageStartY - 40 - mage.tileOffsetY){
+                    mage.moveUp();
                 }else{
                     magePath.pop();
                 }

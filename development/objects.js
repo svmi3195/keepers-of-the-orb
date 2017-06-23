@@ -32,7 +32,11 @@ function Mage (spawnPoint){
         this.x--;
     };
 
-    this.moveY = function(){
+    this.moveUp = function(){
+        this.y--;
+    };
+
+    this.moveDown = function(){
         this.y++;
     };
 };
