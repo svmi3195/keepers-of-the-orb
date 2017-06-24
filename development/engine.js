@@ -26,11 +26,11 @@ function Tile(index, cols, rows){
      }
      return false;  
    }, this);
-   //might need later for combat
+   //might need later for combat/interaction
    this.diagonalNeighbors = [index - cols - 1, index + cols - 1, index - cols + 1, index + cols + 1].filter(function(x){
      if(x >= 0 && x < cols * rows){ 
        //left edge checker
-	   if(this.index % cols == 0 && (x == this.index - 1 || x == this.index - cols - 1 || x == this.index + cols - 1)){     
+	   if(this.index % cols == 0 && (x == this.index - 1 || x == this.index - cols - 1 || x == this.index + cols - 1)){ 
           return false;
        }
        //right edge checker

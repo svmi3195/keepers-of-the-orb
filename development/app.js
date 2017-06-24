@@ -11,8 +11,6 @@ function runGame(){
 
     var map = new Tilemap(canvas, ctx);
     map.randomize();
-    //findPath(map, transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map), transIndex2to1([0, Math.floor(map.rows/2) * map.cols], map));
-    //findPath(map, transIndex2to1([0,Math.floor(map.rows/2)], map), transIndex2to1([map.cols - 3, Math.floor(map.rows/2)], map));
 
     var entrance = [0, Math.floor(map.rows/2) * map.tsize];
 
@@ -101,10 +99,3 @@ function runGame(){
     };
 
 };//end of runGame
-
-
-
-
-
-
-
