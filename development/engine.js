@@ -1,6 +1,7 @@
 function Tile(index, cols, rows){
    this.index = index;
    this.terrain = 'grass';
+   this.textureNum = Math.floor(Math.random() * 6);
    this.f = 0;
    this.g = 0;
    this.h = 0;
@@ -67,7 +68,7 @@ function Tilemap(canvas, context) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
                 if (tile.terrain == 'grass') {
-                    context.drawImage(this.textures[0], c * this.tsize, r * this.tsize);
+                    context.drawImage(this.textures[tile.textureNum], c * this.tsize, r * this.tsize);
                 }else if (tile.terrain == 'wall'){
                     context.fillStyle = '#0d0d0d';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
