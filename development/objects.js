@@ -41,3 +41,15 @@ function Mage (spawnPoint){
         this.y += this.speed;
     };
 };
+
+
+function Orb(spawnPoint){
+    this.hitpoints = 300;
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1];
+    this.texture = document.getElementById('enemy-1');
+
+    this.render = function(context){
+        context.drawImage(this.texture, this.x, this.y);
+    };
+}

@@ -19,6 +19,8 @@ function runGame(){
     var mage = new Mage(entrance);
     var magePath = [];
 
+    var orb = new Orb([(map.cols - 3) * map.tsize, Math.floor(map.rows/2) * map.tsize]);
+
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
@@ -57,10 +59,12 @@ function runGame(){
         }
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+               
         map.render();
         //enemy.render(ctx);
         //enemy.moveX();
+
+        orb.render(ctx);
 
         if(magePath.length > 0){
             var mageStartX = transIndex1to2(magePath[magePath.length - 1], map)[0] * map.tsize;
