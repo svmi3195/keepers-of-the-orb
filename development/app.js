@@ -16,10 +16,14 @@ function runGame(){
 
     //var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 
+    var objectsManager = new ObjectsManager();
+
     var mage = new Mage(entrance);
+    objectsManager.objects.push(mage);
     var magePath = [];
 
-    var orb = new Orb([(map.cols - 3) * map.tsize, Math.floor(map.rows/2) * map.tsize]);
+    var orb = new Orb([(map.cols - 3) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
+    objectsManager.objects.push(orb);
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -60,11 +64,7 @@ function runGame(){
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
                
-        map.render();
-        //enemy.render(ctx);
-        //enemy.moveX();
-
-        orb.render(ctx);
+        map.render();        
 
         if(magePath.length > 0){
             var mageStartX = transIndex1to2(magePath[magePath.length - 1], map)[0] * map.tsize;
@@ -95,9 +95,8 @@ function runGame(){
                 }
             }
         };
-
-        mage.render(ctx);
-
+        
+        objectsManager.renderAll(ctx);
 
         requestAnimationFrame(gameLoop);
     };
