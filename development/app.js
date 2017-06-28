@@ -25,6 +25,8 @@ function runGame(){
     var orb = new Orb([(map.cols - 3) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
     objectsManager.objects.push(orb);
 
+    console.log(objectsManager.objects);
+
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
         //console.log(e.which)
@@ -84,12 +86,14 @@ function runGame(){
             }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - map.cols){
                 if(mage.y < mageStartY + 40 - mage.tileOffsetY){
                     mage.moveDown();
+                    objectsManager.sortObjects();
                 }else{
                     magePath.pop();
                 }
             }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + map.cols){
                 if(mage.y > mageStartY - 40 - mage.tileOffsetY){
                     mage.moveUp();
+                    objectsManager.sortObjects();
                 }else{
                     magePath.pop();
                 }

@@ -10,10 +10,17 @@ function ObjectsManager(){
             context.drawImage(this.objects[i].texture, this.objects[i].x, this.objects[i].y);
         }
     };
-}
+
+    this.sortObjects = function(){
+        this.objects.sort(function(a,b){
+            return (a.y - a.tileOffsetY) - (b.y - b.tileOffsetY);
+        });
+    }
+};
 
 function Enemy (spawnPoint){
     this.hitpoints = 100;
+    this.tileOffsetY = 0;
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.texture = document.getElementById('enemy-1');
@@ -52,5 +59,6 @@ function Orb(spawnPoint){
     this.hitpoints = 300;
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
+    this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
-}
+};
