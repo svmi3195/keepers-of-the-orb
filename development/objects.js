@@ -13,7 +13,7 @@ function ObjectsManager(){
 
     this.sortObjects = function(){
         this.objects.sort(function(a,b){
-            return (a.y - a.tileOffsetY) - (b.y - b.tileOffsetY);
+            return (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY);
         });
     }
 };//end of ObjectsManager

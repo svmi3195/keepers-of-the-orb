@@ -28,6 +28,7 @@ function runGame(){
     objectsManager.objects.push(orb);
 
     objectsManager.sortObjects();
+    console.log(objectsManager.objects)
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -87,6 +88,7 @@ function runGame(){
                 if(mage.y < mageStartY + 40 - mage.tileOffsetY){
                     mage.moveDown();
                     objectsManager.sortObjects();
+                    console.log(objectsManager.objects)
                 }else{
                     magePath.pop();
                 }
@@ -94,6 +96,7 @@ function runGame(){
                 if(mage.y > mageStartY - 40 - mage.tileOffsetY){
                     mage.moveUp();
                     objectsManager.sortObjects();
+                    console.log(objectsManager.objects)
                 }else{
                     magePath.pop();
                 }
