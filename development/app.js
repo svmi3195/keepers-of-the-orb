@@ -12,6 +12,8 @@ function runGame(){
     var map = new Tilemap(canvas, ctx);
     map.populate();
 
+    var ui = new UI(map);
+
     var entrance = [0, Math.floor(map.rows/2) * map.tsize];
 
     //var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
@@ -99,6 +101,7 @@ function runGame(){
         };
         
         objectsManager.renderAll(ctx);
+        ui.render(ctx);
 
         requestAnimationFrame(gameLoop);
     };

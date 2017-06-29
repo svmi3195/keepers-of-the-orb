@@ -135,9 +135,7 @@ function Tilemap(canvas, context) {
         for(var iRight = this.cols - 2; iRight < this.tiles.length - 2; iRight += this.cols){
           this.update(iRight, 'mountains');
         }
-      }
-
-      
+      }      
         
       this.update(transIndex2to1([0, Math.floor(this.rows/2)], this), 'grass'); //entrance
       this.update(transIndex2to1([this.cols - 4, Math.floor(this.rows/2)], this), 'grass'); //orb
