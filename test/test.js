@@ -27,7 +27,7 @@ describe('Keepers of the Orb', function() {
             assert.lengthOf(map.getTile, 2);
         });
 
-        map.randomize();
+        map.populate();
 
         it('for wall tiles tile property blocked is true', function(){
             for(var i = 0; i < map.tiles.length; i++){
@@ -68,7 +68,7 @@ describe('Keepers of the Orb', function() {
     describe('Pathfinder', function(){
 
         var map = new Tilemap(canvas, ctx);
-        map.randomize();
+        map.populate();
         findPath(map);
         it('after pathfinder did run tiles properties are back to initial values', function(){
             for(var i = 0; i < map.tiles.length; i++){

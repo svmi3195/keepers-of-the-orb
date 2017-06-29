@@ -10,7 +10,7 @@ function runGame(){
     canvas.height = window.innerHeight;
 
     var map = new Tilemap(canvas, ctx);
-    map.randomize();
+    map.populate();
 
     var entrance = [0, Math.floor(map.rows/2) * map.tsize];
 
@@ -33,7 +33,7 @@ function runGame(){
         
         switch (e.which){
             case 114: //r
-                map.randomize();
+                map.populate();
                 map.render();
                 break;
             case 103: //g

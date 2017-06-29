@@ -94,15 +94,14 @@ function Tilemap(canvas, context) {
 
     this.update = function(index, strTerrain){
         this.tiles[index].terrain = strTerrain;
-        if(strTerrain == 'wall'){
+        if(strTerrain == 'wall' || strTerrain == 'mountains'){
           this.tiles[index].blocked = true;
         }else{
           this.tiles[index].blocked = false;
         }
     }
 
-    //why do we even need cols and rows here? rewrite with tiles array
-    this.randomize = function(){
+    this.populate = function(){
 
       for(var i = 0; i < this.tiles.length; i++){
         if(Math.random() < 0.15){
@@ -111,11 +110,41 @@ function Tilemap(canvas, context) {
           this.update(i, 'grass');
         }
       }
+
+      for(var iTop = 0; iTop < this.cols; iTop++){
+        this.update(iTop, 'mountains');
+      }
+
+      for(var iBottom = this.tiles.length - this.cols; iBottom < this.tiles.length; iBottom++){
+        this.update(iBottom, 'mountains');
+      }
+
+      if(this.rows - canvas.height / this.tsize > 0.5){
+        for(var iBottom = this.tiles.length - this.cols * 2; iBottom < this.tiles.length - this.cols; iBottom++){
+          this.update(iBottom, 'mountains');
+        }
+      }
+
+      for(var iLeft = 0; iLeft < this.tiles.length; iLeft += this.cols){
+        this.update(iLeft, 'mountains');
+      }      
+
+      for(var iRight = this.cols - 1; iRight < this.tiles.length - 1; iRight += this.cols){
+        this.update(iRight, 'mountains');
+      }
+
+      if(this.cols - canvas.width / this.tsize > 0.5){
+        for(var iRight = this.cols - 2; iRight < this.tiles.length - 2; iRight += this.cols){
+          this.update(iRight, 'mountains');
+        }
+      }
+
+      
         
-        this.update(transIndex2to1([0, Math.floor(this.rows/2)], this), 'grass'); //entrance
-        this.update(transIndex2to1([this.cols - 4, Math.floor(this.rows/2)], this), 'grass'); //orb
+      this.update(transIndex2to1([0, Math.floor(this.rows/2)], this), 'grass'); //entrance
+      this.update(transIndex2to1([this.cols - 4, Math.floor(this.rows/2)], this), 'grass'); //orb
         
-    };//end of randomize map
+    };//end of populate map
 
 };//end of Tilemap
 
