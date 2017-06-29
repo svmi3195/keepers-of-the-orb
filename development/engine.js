@@ -119,11 +119,9 @@ function Tilemap(canvas, context) {
         this.update(iBottom, 'mountains');
       }
 
-      if(this.rows - canvas.height / this.tsize > 0.5){
-        for(var iBottom = this.tiles.length - this.cols * 2; iBottom < this.tiles.length - this.cols; iBottom++){
-          this.update(iBottom, 'mountains');
-        }
-      }
+     for(var iBottom = this.tiles.length - this.cols * 2; iBottom < this.tiles.length - this.cols; iBottom++){
+        this.update(iBottom, 'mountains');
+     }
 
       for(var iLeft = 0; iLeft < this.tiles.length; iLeft += this.cols){
         this.update(iLeft, 'mountains');
