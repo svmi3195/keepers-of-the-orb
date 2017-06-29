@@ -92,28 +92,29 @@ function Tilemap(canvas, context) {
         }
     };// end of Tilemap render grid
 
-    this.update = function(col, row, strTerrain){
-        this.tiles[row * this.cols + col].terrain = strTerrain;
+    this.update = function(index, strTerrain){
+        this.tiles[index].terrain = strTerrain;
         if(strTerrain == 'wall'){
-          this.tiles[row * this.cols + col].blocked = true;
+          this.tiles[index].blocked = true;
         }else{
-          this.tiles[row * this.cols + col].blocked = false;
+          this.tiles[index].blocked = false;
         }
     }
 
     //why do we even need cols and rows here? rewrite with tiles array
     this.randomize = function(){
-        for (var c = 0; c < this.cols; c++) {
-            for (var r = 0; r < this.rows; r++) {
-                if(Math.random() < 0.2){    
-                    this.update(c, r, 'wall');
-                }else{
-                    this.update(c, r, 'grass');
-                }
-            }
+
+      for(var i = 0; i < this.tiles.length; i++){
+        if(Math.random() < 0.15){
+          this.update(i, 'wall');
+        }else{
+          this.update(i, 'grass');
         }
-        this.update(0, Math.floor(this.rows/2), 'grass'); //entrance
-        this.update(this.cols - 4, Math.floor(this.rows/2), 'grass'); //orb
+      }
+        
+        this.update(transIndex2to1([0, Math.floor(this.rows/2)], this), 'grass'); //entrance
+        this.update(transIndex2to1([this.cols - 4, Math.floor(this.rows/2)], this), 'grass'); //orb
+        
     };//end of randomize map
 
 };//end of Tilemap
