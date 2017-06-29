@@ -60,7 +60,7 @@ function Tilemap(canvas, context) {
     }
 
     this.getTile = function(col, row) {
-        return this.tiles[row * this.cols + col]
+        return this.tiles[row * this.cols + col];
     };
 
     this.render = function(){
@@ -74,6 +74,9 @@ function Tilemap(canvas, context) {
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }else if (tile.terrain == 'path'){
                     context.fillStyle = 'blue';   
+                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
+                }else if (tile.terrain == 'mountains'){
+                    context.fillStyle = 'red';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }
             }
@@ -93,10 +96,12 @@ function Tilemap(canvas, context) {
         this.tiles[row * this.cols + col].terrain = strTerrain;
         if(strTerrain == 'wall'){
           this.tiles[row * this.cols + col].blocked = true;
+        }else{
+          this.tiles[row * this.cols + col].blocked = false;
         }
     }
 
-    //why do we even need cols and rows here? rewrite with tiles array!
+    //why do we even need cols and rows here? rewrite with tiles array
     this.randomize = function(){
         for (var c = 0; c < this.cols; c++) {
             for (var r = 0; r < this.rows; r++) {
@@ -107,6 +112,8 @@ function Tilemap(canvas, context) {
                 }
             }
         }
+        this.update(0, Math.floor(this.rows/2), 'grass'); //entrance
+        this.update(this.cols - 4, Math.floor(this.rows/2), 'grass'); //orb
     };//end of randomize map
 
 };//end of Tilemap

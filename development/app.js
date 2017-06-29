@@ -22,10 +22,10 @@ function runGame(){
     objectsManager.objects.push(mage);
     var magePath = [];
 
-    var orb = new Orb([(map.cols - 3) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
+    var orb = new Orb([(map.cols - 4) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
     objectsManager.objects.push(orb);
 
-    console.log(objectsManager.objects);
+    objectsManager.sortObjects();
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -55,8 +55,6 @@ function runGame(){
     gameLoop();
 
     function gameLoop(){
-
-        
 
         if(clicked.length == 2){
             magePath = findPath(map, clicked[0], clicked[1]);

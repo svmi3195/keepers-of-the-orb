@@ -45,6 +45,14 @@ describe('Keepers of the Orb', function() {
             }
         });
 
+        it('entrance tile is not blocked', function(){
+            assert.equal(map.getTile(0, Math.floor(map.rows/2)).blocked === false, true);
+        });
+
+        it('orb tile terrain is grass', function(){
+            assert.equal(map.getTile(map.cols - 4, Math.floor(map.rows/2)).terrain === 'grass', true);
+        });
+
     });//end of Tilemap tests
 
     describe('Enemy', function(){
