@@ -15,7 +15,15 @@ function ObjectsManager(){
         this.objects.sort(function(a,b){
             return (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY);
         });
-    }
+    };
+
+    this.registerAll = function(map){
+        var index;
+        for(var i = 0; i < this.objects.length; i++){
+            index = transIndex2to1([this.objects[i].x / map.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / map.tsize], map);
+            map.tiles[index].object = this.objects[i];
+        }
+    };
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
@@ -24,6 +32,8 @@ function Enemy (spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.texture = document.getElementById('enemy-1');
+
+    this.name = 'Enemy';
 
     this.moveX = function(){
         this.x++;
@@ -38,6 +48,8 @@ function Mage (spawnPoint){
     this.texture = document.getElementById('mage-1');
     this.speed = 2;
     this.path = [];
+
+    this.name = 'Mage';
 
     this.moveRight = function(){
         this.x += this.speed;
@@ -62,4 +74,6 @@ function Orb(spawnPoint){
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
+
+    this.name = 'The orb';
 };

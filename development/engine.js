@@ -2,6 +2,7 @@ function Tile(index, cols, rows){
    this.index = index;
    this.terrain = 'grass';
    this.textureNum = Math.floor(Math.random() * 6);
+   this.object;
    this.f = 0;
    this.g = 0;
    this.h = 0;

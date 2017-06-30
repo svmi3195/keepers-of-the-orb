@@ -28,7 +28,7 @@ function runGame(){
     objectsManager.objects.push(orb);
 
     objectsManager.sortObjects();
-    console.log(objectsManager.objects)
+    objectsManager.registerAll(map);
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -52,7 +52,11 @@ function runGame(){
     function getClickedTile(event){
         var x = event.clientX;
         var y = event.clientY;
-        clicked.push(transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map));         
+        var clickedTile = transIndex2to1([Math.floor(x/map.tsize), Math.floor(y/map.tsize)], map);
+        if(map.tiles[clickedTile].object){
+            ui.onObjectSelect(map.tiles[clickedTile].object);
+        }
+        clicked.push(clickedTile);         
     };//end of mouse getClickedTile
 
     gameLoop();
@@ -88,7 +92,6 @@ function runGame(){
                 if(mage.y < mageStartY + 40 - mage.tileOffsetY){
                     mage.moveDown();
                     objectsManager.sortObjects();
-                    console.log(objectsManager.objects)
                 }else{
                     magePath.pop();
                 }
@@ -96,7 +99,6 @@ function runGame(){
                 if(mage.y > mageStartY - 40 - mage.tileOffsetY){
                     mage.moveUp();
                     objectsManager.sortObjects();
-                    console.log(objectsManager.objects)
                 }else{
                     magePath.pop();
                 }
