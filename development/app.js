@@ -33,21 +33,26 @@ function runGame(){
 
     var projectile = new Projectile([0,0], [300, 300]);    
 
-    var clicked = [];
     //mouseclick event
+    var clicked = [];    
     canvas.addEventListener("mousedown", getClickedTile, false);
 
     function getClickedTile(event){
         var x = event.clientX;
         var y = event.clientY;
         var clickedTile = transIndex2to1([Math.floor(x/tilemap.tsize), Math.floor(y/tilemap.tsize)], tilemap);
-        console.log(tilemap.tiles[clickedTile])
-        if(tilemap.tiles[clickedTile].object){
+        console.log(tilemap.tiles[clickedTile]);
+
+        if(event.ctrlKey){
+            objectsManager.shoot(mage, [x,y]);
+        }else{
+            if(tilemap.tiles[clickedTile].object){
             ui.select(tilemap.tiles[clickedTile].object);
-        }
-        if(ui.selected == mage){
-            clicked.push(clickedTile); 
-        }
+            }
+            if(ui.selected == mage){
+                clicked.push(clickedTile); 
+            }
+        } 
         
     };//end of mouse getClickedTile
 
@@ -73,8 +78,6 @@ function runGame(){
         objectsManager.renderAll();
 
         ui.render(ctx);
-        projectile.move();
-        projectile.render(ctx);
 
         requestAnimationFrame(gameLoop);
     };

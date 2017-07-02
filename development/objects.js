@@ -1,6 +1,7 @@
 function ObjectsManager(context, tilemap){
     this.objects = [];
     this.movingObjects = [];
+    this.movingParticles = [];
 
     this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
@@ -83,13 +84,15 @@ function ObjectsManager(context, tilemap){
                 }
     };//end of moveObj
 
-    this.moveAll = function(){
-
-        //later could make special array for moving objects
+    this.moveAll = function(){        
         for(var i = 0; i < this.movingObjects.length; i++){
             if(this.movingObjects[i].path.length > 0){
                 this.moveObj(this.movingObjects[i]);
             }
+        }
+
+        for(var j = 0; j < this.movingParticles.length; j++){
+            this.movingParticles[j].move();
         }
     };
 
@@ -107,6 +110,12 @@ function ObjectsManager(context, tilemap){
         enemy.path.shift();
 
         this.registerObj(enemy, entranceIndex);
+    };//end of spawn enemy
+
+    this.shoot = function(shooter, goal){
+        var projectile = new Projectile([shooter.x + 20, shooter.y + 20], goal);
+        this.objects.push(projectile);
+        this.movingParticles.push(projectile);
     };
 
 };//end of ObjectsManager
@@ -147,24 +156,24 @@ function Mage (spawnPoint){
     this.texture = document.getElementById('mage-1');
     this.speed = 2;
     this.path = [];
+    this.walkingMode = false;
+    this.shootingMode = true;
 
     this.name = 'Mage';
 
     this.moveRight = function(){
         this.x += this.speed;
     };
-
     this.moveLeft = function(){
         this.x -= this.speed;
     };
-
     this.moveUp = function(){
         this.y -= this.speed;
     };
-
     this.moveDown = function(){
         this.y += this.speed;
     };
+    
 };
 
 function Orb(spawnPoint){
@@ -178,6 +187,7 @@ function Orb(spawnPoint){
 };
 
 function Projectile(fromPos, toPos){
+    this.texture = document.getElementById('projectile-1');
     this.x = fromPos[0];
     this.y = fromPos[1];
     this.dx = toPos[0] - fromPos[0];
@@ -189,10 +199,5 @@ function Projectile(fromPos, toPos){
         this.x += this.speed;
         this.y += this.speed * this.coef;
     }
-
-    this.render = function(context){
-        context.fillStyle = 'white';   
-        context.fillRect(this.x, this.y, 10, 10);
-    }
-
+    
 }
