@@ -18,7 +18,7 @@ function runGame(){
 
     //var enemy = new Enemy([0, Math.floor(map.rows/2) * map.tsize]);
 
-    var objectsManager = new ObjectsManager();
+    var objectsManager = new ObjectsManager(ctx, map);
 
     var mage = new Mage(entrance);
     objectsManager.objects.push(mage);
@@ -27,7 +27,7 @@ function runGame(){
     objectsManager.objects.push(orb);
 
     objectsManager.sortObjects();
-    objectsManager.registerAll(map);
+    objectsManager.registerAll();
 
     //keyboard shortcuts
     document.addEventListener('keypress', function(e){
@@ -73,38 +73,10 @@ function runGame(){
         map.render();        
 
         if(mage.path.length > 0){
-            var mageStartX = transIndex1to2(mage.path[mage.path.length - 1], map)[0] * map.tsize;
-            var mageStartY = transIndex1to2(mage.path[mage.path.length - 1], map)[1] * map.tsize;
-            if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] + 1){
-                if(mage.x > mageStartX - 40){
-                    mage.moveLeft();
-                }else{
-                    mage.path.pop();
-                }  
-            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] - 1){
-                if(mage.x < mageStartX + 40){
-                    mage.moveRight();
-                }else{
-                    mage.path.pop();
-                }
-            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] - map.cols){
-                if(mage.y < mageStartY + 40 - mage.tileOffsetY){
-                    mage.moveDown();
-                    objectsManager.sortObjects();
-                }else{
-                    mage.path.pop();
-                }
-            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] + map.cols){
-                if(mage.y > mageStartY - 40 - mage.tileOffsetY){
-                    mage.moveUp();
-                    objectsManager.sortObjects();
-                }else{
-                    mage.path.pop();
-                }
-            }
+            objectsManager.moveObj(mage);
         };
         
-        objectsManager.renderAll(ctx);
+        objectsManager.renderAll();
         ui.render(ctx);
 
         requestAnimationFrame(gameLoop);

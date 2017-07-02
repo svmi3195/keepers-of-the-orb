@@ -1,11 +1,11 @@
-function ObjectsManager(){
+function ObjectsManager(context, map){
     this.objects = [];
 
-    this.renderObject = function(context, object){
+    this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
     };
 
-    this.renderAll = function(context){
+    this.renderAll = function(){
         for(var i = 0; i < this.objects.length; i++){
             context.drawImage(this.objects[i].texture, this.objects[i].x, this.objects[i].y);
         }
@@ -17,13 +17,47 @@ function ObjectsManager(){
         });
     };
 
-    this.registerAll = function(map){
+    this.registerAll = function(){
         var index;
         for(var i = 0; i < this.objects.length; i++){
             index = transIndex2to1([this.objects[i].x / map.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / map.tsize], map);
             map.tiles[index].object = this.objects[i];
         }
     };
+
+    this.moveObj = function (obj){
+        var startX = transIndex1to2(obj.path[obj.path.length - 1], map)[0] * map.tsize;
+        var startY = transIndex1to2(obj.path[obj.path.length - 1], map)[1] * map.tsize;
+                if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + 1){
+                    if(obj.x > startX - 40){
+                        obj.moveLeft();
+                    }else{
+                        obj.path.pop();
+                    }  
+                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - 1){
+                    if(obj.x < startX + 40){
+                        obj.moveRight();
+                    }else{
+                        obj.path.pop();
+                    }
+                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - map.cols){
+                    if(obj.y < startY + 40 - obj.tileOffsetY){
+                        obj.moveDown();
+                        this.sortObjects();
+                    }else{
+                        obj.path.pop();
+                    }
+                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + map.cols){
+                    if(obj.y > startY - 40 - obj.tileOffsetY){
+                        obj.moveUp();
+                        this.sortObjects();
+                    }else{
+                        obj.path.pop();
+                    }
+                }
+    };//end of moveObj
+
+
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
