@@ -4,8 +4,20 @@ function UI(tilemap){
     this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
     this.y = (tilemap.rows - 2) * tilemap.tsize;
 
-    this.onObjectSelect = function(object){
-        console.log(object.name);
+    this.selected = null;
+
+    this.select = function(obj){
+        if(obj == this.selected){
+            this.deselect();
+        }else{
+            this.selected = obj;
+            console.log(this.selected);
+        }        
+    };
+
+    this.deselect = function(){
+        this.selected = null;
+        console.log(this.selected);
     };
 
     this.render = function(context){

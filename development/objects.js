@@ -26,24 +26,45 @@ function ObjectsManager(context, tilemap){
         }
     };
 
+    this.registerObj = function(obj, index){
+        tilemap.tiles[index].object = obj;
+    };
+
+    this.unregisterObj = function(obj, index){
+        tilemap.tiles[index].object = null;
+    };
+
     this.moveObj = function (obj){
         var startX = transIndex1to2(obj.path[obj.path.length - 1], tilemap)[0] * tilemap.tsize;
         var startY = transIndex1to2(obj.path[obj.path.length - 1], tilemap)[1] * tilemap.tsize;
+
                 if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + 1){
                     if(obj.x > startX - 40){
                         obj.moveLeft();
+                        if(obj.x % tilemap.tsize >= 0.5){
+                            this.unregisterObj(obj, transIndex2to1([Math.ceil(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
+                            this.registerObj(obj, transIndex2to1([Math.floor(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
+                        }
                     }else{
                         obj.path.pop();
                     }  
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - 1){
                     if(obj.x < startX + 40){
                         obj.moveRight();
+                        if(obj.x % tilemap.tsize >= 0.5){
+                            this.unregisterObj(obj, transIndex2to1([Math.floor(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
+                            this.registerObj(obj, transIndex2to1([Math.ceil(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
+                        }
                     }else{
                         obj.path.pop();
                     }
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - tilemap.cols){
                     if(obj.y < startY + 40 - obj.tileOffsetY){
                         obj.moveDown();
+                        if(obj.y % tilemap.tsize >= 0.5){
+                            this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
+                            this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
+                        }
                         this.sortObjects();
                     }else{
                         obj.path.pop();
@@ -51,6 +72,10 @@ function ObjectsManager(context, tilemap){
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + tilemap.cols){
                     if(obj.y > startY - 40 - obj.tileOffsetY){
                         obj.moveUp();
+                        if(obj.y % tilemap.tsize >= 0.5){
+                            this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
+                            this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
+                        }
                         this.sortObjects();
                     }else{
                         obj.path.pop();
@@ -71,7 +96,9 @@ function ObjectsManager(context, tilemap){
     this.spawnEnemy = function(){
 
         var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
         var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        var orbIndex = transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap);
 
         var enemy = new Enemy(entrancePos);
         this.objects.push(enemy);
@@ -79,6 +106,7 @@ function ObjectsManager(context, tilemap){
         enemy.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
         enemy.path.shift();
 
+        this.registerObj(enemy, entranceIndex);
     };
 
 };//end of ObjectsManager

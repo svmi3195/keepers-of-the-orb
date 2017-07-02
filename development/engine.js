@@ -2,7 +2,7 @@ function Tile(index, cols, rows){
    this.index = index;
    this.terrain = 'grass';
    this.textureNum = Math.floor(Math.random() * 6);
-   this.object;
+   this.object = null;
    this.f = 0;
    this.g = 0;
    this.h = 0;
@@ -148,13 +148,13 @@ function Tilemap(canvas, context) {
 //PATHFINDER
 //https://codepen.io/svmi3195/pen/gRrBBJ
 
-
 function heuristic(point1, point2){
   var a = point1[0] - point2[0];
   var b = point1[1] - point2[1];
   
   //euclidian distance
   //var distance = Math.sqrt( a*a + b*b );
+
   //manhattan distance
   var distance = Math.abs(a) + Math.abs(b);
   return distance; 
