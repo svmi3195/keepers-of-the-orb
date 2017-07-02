@@ -68,6 +68,18 @@ function ObjectsManager(context, tilemap){
         }
     };
 
+    this.spawnEnemy = function(){
+
+        var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
+
+        var enemy = new Enemy(entrancePos);
+        this.objects.push(enemy);
+        this.movingObjects.push(enemy);
+        enemy.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
+        enemy.path.shift();
+
+    };
 
 };//end of ObjectsManager
 
@@ -77,12 +89,25 @@ function Enemy (spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.texture = document.getElementById('enemy-1');
+    this.speed = 1;
     this.path = [];
 
     this.name = 'Enemy';
 
-    this.moveX = function(){
-        this.x++;
+    this.moveRight = function(){
+        this.x += this.speed;
+    };
+
+    this.moveLeft = function(){
+        this.x -= this.speed;
+    };
+
+    this.moveUp = function(){
+        this.y -= this.speed;
+    };
+
+    this.moveDown = function(){
+        this.y += this.speed;
     };
 };
 

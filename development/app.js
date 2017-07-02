@@ -12,19 +12,26 @@ function runGame(){
     var tilemap = new Tilemap(canvas, ctx);
     tilemap.populate();
 
+    var objectsManager = new ObjectsManager(ctx, tilemap);
+
     var ui = new UI(tilemap);
 
-    var entrance = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+    var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+    var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
 
-    //var enemy = new Enemy([0, Math.floor(tilemap.rows/2) * tilemap.tsize]);
-
-    var objectsManager = new ObjectsManager(ctx, tilemap);
+    /*
+    var enemy = new Enemy(entrancePos);
+    objectsManager.objects.push(enemy);
+    objectsManager.movingObjects.push(enemy);
+    enemy.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
+    enemy.path.shift();
+    */
 
     var mage = new Mage([1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize]);
     objectsManager.objects.push(mage);
     objectsManager.movingObjects.push(mage);
 
-    var orb = new Orb([(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize]);    
+    var orb = new Orb(orbPos);    
     objectsManager.objects.push(orb);
 
     objectsManager.sortObjects();
@@ -53,10 +60,12 @@ function runGame(){
         var x = event.clientX;
         var y = event.clientY;
         var clickedTile = transIndex2to1([Math.floor(x/tilemap.tsize), Math.floor(y/tilemap.tsize)], tilemap);
+        //console.log(tilemap.tiles[clickedTile])
         if(tilemap.tiles[clickedTile].object){
             ui.onObjectSelect(tilemap.tiles[clickedTile].object);
         }
-        clicked.push(clickedTile);         
+        clicked.push(clickedTile);
+        console.log(clicked)         
     };//end of mouse getClickedTile
 
     gameLoop();
@@ -68,7 +77,11 @@ function runGame(){
             mage.path.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
             clicked.shift();
         }
-        
+
+        if(Math.random() < 0.01){
+            objectsManager.spawnEnemy();
+        }
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
                
         tilemap.render();     
