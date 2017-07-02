@@ -1,5 +1,6 @@
 function ObjectsManager(context, map){
     this.objects = [];
+    this.movingObjects = [];
 
     this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
@@ -56,6 +57,16 @@ function ObjectsManager(context, map){
                     }
                 }
     };//end of moveObj
+
+    this.moveAll = function(){
+
+        //later could make special array for moving objects
+        for(var i = 0; i < this.movingObjects.length; i++){
+            if(this.movingObjects[i].path.length > 0){
+                this.moveObj(this.movingObjects[i]);
+            }
+        }
+    };
 
 
 };//end of ObjectsManager

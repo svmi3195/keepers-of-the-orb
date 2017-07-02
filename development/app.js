@@ -22,6 +22,7 @@ function runGame(){
 
     var mage = new Mage(entrance);
     objectsManager.objects.push(mage);
+    objectsManager.movingObjects.push(mage);
 
     var orb = new Orb([(map.cols - 4) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
     objectsManager.objects.push(orb);
@@ -71,10 +72,12 @@ function runGame(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
                
         map.render();        
-
+/*
         if(mage.path.length > 0){
             objectsManager.moveObj(mage);
-        };
+        };*/
+
+        objectsManager.moveAll();
         
         objectsManager.renderAll();
         ui.render(ctx);
