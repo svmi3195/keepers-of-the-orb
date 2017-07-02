@@ -176,3 +176,23 @@ function Orb(spawnPoint){
 
     this.name = 'The orb';
 };
+
+function Projectile(fromPos, toPos){
+    this.x = fromPos[0];
+    this.y = fromPos[1];
+    this.dx = toPos[0] - fromPos[0];
+    this.dy = toPos[1] - fromPos[1];
+    this.coef = this.dy / this.dx;
+    this.speed = 5;
+
+    this.move = function(){
+        this.x += this.speed;
+        this.y += this.speed * this.coef;
+    }
+
+    this.render = function(context){
+        context.fillStyle = 'white';   
+        context.fillRect(this.x, this.y, 10, 10);
+    }
+
+}

@@ -29,7 +29,9 @@ function runGame(){
     objectsManager.objects.push(orb);
 
     objectsManager.sortObjects();
-    objectsManager.registerAll();    
+    objectsManager.registerAll();
+
+    var projectile = new Projectile([0,0], [300, 300]);    
 
     var clicked = [];
     //mouseclick event
@@ -71,6 +73,8 @@ function runGame(){
         objectsManager.renderAll();
 
         ui.render(ctx);
+        projectile.move();
+        projectile.render(ctx);
 
         requestAnimationFrame(gameLoop);
     };
