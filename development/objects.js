@@ -93,13 +93,33 @@ function ObjectsManager(context, tilemap){
 
         for(var j = this.movingParticles.length - 1; j >=0 ; j--){
 
-            //this.movingParticles[j].move();
+            this.movingParticles[j].move();
+
+            var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
+
+            if(this.movingParticles[j].x <= 5){
+                removeFromArray(this.objects, this.movingParticles[j]);
+                this.movingParticles.splice(j, 1);                
+            }else if(tilemap.tiles[tile].terrain == 'wall' || tilemap.tiles[tile].terrain == 'mountains'){
+                //add explosions!
+                removeFromArray(this.objects, this.movingParticles[j]);
+                this.movingParticles.splice(j, 1);                
+            }else if(tilemap.tiles[tile].object && tilemap.tiles[tile].object.name == 'Enemy'){
+                //add explosions!
+                removeFromArray(this.objects, tilemap.tiles[tile].object);
+                removeFromArray(this.movingObjects, tilemap.tiles[tile].object);
+                tilemap.tiles[tile].object = null;
+                removeFromArray(this.objects, this.movingParticles[j]);
+                this.movingParticles.splice(j, 1);                
+            }
+
+            /*
 
             if(this.movingParticles[j].d > 100){
                 this.movingParticles.splice(j, 1);
             }else{
                 this.movingParticles[j].move();
-        }/*
+        }
 
                 var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
 
