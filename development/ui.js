@@ -1,8 +1,8 @@
-function UI(map){
+function UI(tilemap){
     this.width = 500;
-    this.height = map.tsize;
-    this.x = map.cols * map.tsize / 2 - this.width / 2;
-    this.y = (map.rows - 2) * map.tsize;
+    this.height = tilemap.tsize;
+    this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
+    this.y = (tilemap.rows - 2) * tilemap.tsize;
 
     this.onObjectSelect = function(object){
         console.log(object.name);

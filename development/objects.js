@@ -1,4 +1,4 @@
-function ObjectsManager(context, map){
+function ObjectsManager(context, tilemap){
     this.objects = [];
     this.movingObjects = [];
 
@@ -21,14 +21,14 @@ function ObjectsManager(context, map){
     this.registerAll = function(){
         var index;
         for(var i = 0; i < this.objects.length; i++){
-            index = transIndex2to1([this.objects[i].x / map.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / map.tsize], map);
-            map.tiles[index].object = this.objects[i];
+            index = transIndex2to1([this.objects[i].x / tilemap.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / tilemap.tsize], tilemap);
+            tilemap.tiles[index].object = this.objects[i];
         }
     };
 
     this.moveObj = function (obj){
-        var startX = transIndex1to2(obj.path[obj.path.length - 1], map)[0] * map.tsize;
-        var startY = transIndex1to2(obj.path[obj.path.length - 1], map)[1] * map.tsize;
+        var startX = transIndex1to2(obj.path[obj.path.length - 1], tilemap)[0] * tilemap.tsize;
+        var startY = transIndex1to2(obj.path[obj.path.length - 1], tilemap)[1] * tilemap.tsize;
                 if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + 1){
                     if(obj.x > startX - 40){
                         obj.moveLeft();
@@ -41,14 +41,14 @@ function ObjectsManager(context, map){
                     }else{
                         obj.path.pop();
                     }
-                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - map.cols){
+                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - tilemap.cols){
                     if(obj.y < startY + 40 - obj.tileOffsetY){
                         obj.moveDown();
                         this.sortObjects();
                     }else{
                         obj.path.pop();
                     }
-                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + map.cols){
+                }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + tilemap.cols){
                     if(obj.y > startY - 40 - obj.tileOffsetY){
                         obj.moveUp();
                         this.sortObjects();

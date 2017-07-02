@@ -141,7 +141,7 @@ function Tilemap(canvas, context) {
       this.update(transIndex2to1([0, Math.floor(this.rows/2)], this), 'grass'); //entrance
       this.update(transIndex2to1([this.cols - 4, Math.floor(this.rows/2)], this), 'grass'); //orb
         
-    };//end of populate map
+    };//end of populate tilemap
 
 };//end of Tilemap
 
@@ -160,12 +160,12 @@ function heuristic(point1, point2){
   return distance; 
 }
 
-function findPath(map, start, goal){
+function findPath(tilemap, start, goal){
   var path = [];
   var openList = [];
   var closedList = [];
   if(!start){start = 0}
-  if(!goal){goal = map.tiles.length -1}
+  if(!goal){goal = tilemap.tiles.length -1}
     
   openList.push(start);
   
@@ -177,7 +177,7 @@ function findPath(map, start, goal){
     if(openList.length > 0){
       var winner = 0;
       for(var i = 0; i < openList.length; i++){
-        if(map.tiles[openList[i]].f < map.tiles[openList[winner]].f){
+        if(tilemap.tiles[openList[i]].f < tilemap.tiles[openList[winner]].f){
           winner = i;
         }
       }
@@ -188,38 +188,38 @@ function findPath(map, start, goal){
         path.push(start);
         var temp = current;
         path.push(temp);
-        while(map.tiles[temp].previous){
-          path.push(map.tiles[temp].previous);
-          temp = map.tiles[temp].previous;
+        while(tilemap.tiles[temp].previous){
+          path.push(tilemap.tiles[temp].previous);
+          temp = tilemap.tiles[temp].previous;
         }
       }
 
       removeFromArray(openList, current);
       closedList.push(current);
 
-      var neighbors = map.tiles[current].neighbors;
+      var neighbors = tilemap.tiles[current].neighbors;
       for(var nb = 0; nb < neighbors.length; nb++){
         var neighbor = neighbors[nb];
 
-        if(!closedList.includes(neighbor) && map.tiles[neighbor].blocked === false){
-           var tempG = map.tiles[current].g + 1;
+        if(!closedList.includes(neighbor) && tilemap.tiles[neighbor].blocked === false){
+           var tempG = tilemap.tiles[current].g + 1;
           
           var newPath = false;
           if(openList.includes(neighbor)){
-            if(tempG < map.tiles[neighbor].g){
-              map.tiles[neighbor].g = tempG;
+            if(tempG < tilemap.tiles[neighbor].g){
+              tilemap.tiles[neighbor].g = tempG;
               newPath = true;
             }          
           }else{
-            map.tiles[neighbor].g = tempG;
+            tilemap.tiles[neighbor].g = tempG;
             newPath = true;
             openList.push(neighbor);
           }
           
           if(newPath){
-            map.tiles[neighbor].h = heuristic(transIndex1to2(neighbor, map), transIndex1to2(goal, map));
-            map.tiles[neighbor].f = map.tiles[neighbor].g + map.tiles[neighbor].h;
-            map.tiles[neighbor].previous = current;
+            tilemap.tiles[neighbor].h = heuristic(transIndex1to2(neighbor, tilemap), transIndex1to2(goal, tilemap));
+            tilemap.tiles[neighbor].f = tilemap.tiles[neighbor].g + tilemap.tiles[neighbor].h;
+            tilemap.tiles[neighbor].previous = current;
           }
         }
       }
@@ -227,28 +227,28 @@ function findPath(map, start, goal){
   }else{
     //no solution
     done = true;
-    pathfinderCleanUp(map);
+    pathfinderCleanUp(tilemap);
     return undefined;
   }
 
     
   //visualize path with blue rects:  
   for(var p = 0; p < path.length; p++){
-      map.tiles[path[p]].terrain = 'path';
+      tilemap.tiles[path[p]].terrain = 'path';
   }
   
   }
   
-  pathfinderCleanUp(map);
+  pathfinderCleanUp(tilemap);
   return path;
 };//end of findPath
 
-function pathfinderCleanUp(map){
-  for(var i = 0; i < map.tiles.length; i++){    
-    map.tiles[i].f = 0;
-    map.tiles[i].g = 0;
-    map.tiles[i].h = 0;
-    map.tiles[i].previous = undefined;
+function pathfinderCleanUp(tilemap){
+  for(var i = 0; i < tilemap.tiles.length; i++){    
+    tilemap.tiles[i].f = 0;
+    tilemap.tiles[i].g = 0;
+    tilemap.tiles[i].h = 0;
+    tilemap.tiles[i].previous = undefined;
   }
 }
 

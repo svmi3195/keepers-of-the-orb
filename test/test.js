@@ -9,48 +9,48 @@ describe('Keepers of the Orb', function() {
 
     describe('Tilemap', function(){
 
-        var map = new Tilemap(canvas, ctx);
+        var tilemap = new Tilemap(canvas, ctx);
 
         it('cols is positive integer', function(){
-            assert.equal(map.cols > 0 && Number.isInteger(map.cols), true);
+            assert.equal(tilemap.cols > 0 && Number.isInteger(tilemap.cols), true);
         });
 
         it('rows is positive integer', function(){
-            assert.equal(map.rows > 0 && Number.isInteger(map.rows), true);
+            assert.equal(tilemap.rows > 0 && Number.isInteger(tilemap.rows), true);
         });
 
         it('tiles is not an empty array', function(){
-            assert.equal(map.tiles.length > 0, true);
+            assert.equal(tilemap.tiles.length > 0, true);
         });
 
         it('getTile returns an array of two', function(){
-            assert.lengthOf(map.getTile, 2);
+            assert.lengthOf(tilemap.getTile, 2);
         });
 
-        map.populate();
+        tilemap.populate();
 
         it('for wall tiles tile property blocked is true', function(){
-            for(var i = 0; i < map.tiles.length; i++){
-                    if(map.tiles[i].terrain == 'wall'){
-                        assert.equal(map.tiles[i].blocked === true, true);
+            for(var i = 0; i < tilemap.tiles.length; i++){
+                    if(tilemap.tiles[i].terrain == 'wall'){
+                        assert.equal(tilemap.tiles[i].blocked === true, true);
                     }
             }
         });
 
         it('for grass tiles tile property blocked is false', function(){
-            for(var i = 0; i < map.tiles.length; i++){
-                    if(map.tiles[i].terrain == 'grass'){
-                        assert.equal(map.tiles[i].blocked === false, true);
+            for(var i = 0; i < tilemap.tiles.length; i++){
+                    if(tilemap.tiles[i].terrain == 'grass'){
+                        assert.equal(tilemap.tiles[i].blocked === false, true);
                     }
             }
         });
 
         it('entrance tile is not blocked', function(){
-            assert.equal(map.getTile(0, Math.floor(map.rows/2)).blocked === false, true);
+            assert.equal(tilemap.getTile(0, Math.floor(tilemap.rows/2)).blocked === false, true);
         });
 
         it('orb tile terrain is grass', function(){
-            assert.equal(map.getTile(map.cols - 4, Math.floor(map.rows/2)).terrain === 'grass', true);
+            assert.equal(tilemap.getTile(tilemap.cols - 4, Math.floor(tilemap.rows/2)).terrain === 'grass', true);
         });
 
     });//end of Tilemap tests
@@ -67,16 +67,16 @@ describe('Keepers of the Orb', function() {
 
     describe('Pathfinder', function(){
 
-        var map = new Tilemap(canvas, ctx);
-        map.populate();
-        findPath(map);
+        var tilemap = new Tilemap(canvas, ctx);
+        tilemap.populate();
+        findPath(tilemap);
         it('after pathfinder did run tiles properties are back to initial values', function(){
-            for(var i = 0; i < map.tiles.length; i++){
+            for(var i = 0; i < tilemap.tiles.length; i++){
                 assert.equal(
-                    map.tiles[i].f == 0 &&
-                    map.tiles[i].g == 0 &&
-                    map.tiles[i].h == 0 &&
-                    map.tiles[i].previous == undefined
+                    tilemap.tiles[i].f == 0 &&
+                    tilemap.tiles[i].g == 0 &&
+                    tilemap.tiles[i].h == 0 &&
+                    tilemap.tiles[i].previous == undefined
                 , true);
             }            
         });        

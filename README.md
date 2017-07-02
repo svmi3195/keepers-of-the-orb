@@ -2,7 +2,7 @@
 Little HTML5 game
 
 Keyboard shortcuts
-* r - render map
+* r - render tilemap
 * g - render grid
 * t - render texture
 
