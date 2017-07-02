@@ -91,8 +91,22 @@ function ObjectsManager(context, tilemap){
             }
         }
 
-        for(var j = 0; j < this.movingParticles.length; j++){
-            this.movingParticles[j].move();
+        for(var j = this.movingParticles.length - 1; j >=0 ; j--){
+
+            //this.movingParticles[j].move();
+
+            if(this.movingParticles[j].d > 100){
+                this.movingParticles.splice(j, 1);
+            }else{
+                this.movingParticles[j].move();
+        }/*
+
+                var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
+
+                if(tilemap.tiles[tile].object && tilemap.tiles[tile].object.name == 'Enemy'){
+                    this.movingParticles.splice(j, 1);
+                }
+        }*/            
         }
     };
 
@@ -188,16 +202,35 @@ function Orb(spawnPoint){
 
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
+
     this.x = fromPos[0];
     this.y = fromPos[1];
+    //deltas
     this.dx = toPos[0] - fromPos[0];
     this.dy = toPos[1] - fromPos[1];
-    this.coef = this.dy / this.dx;
+    //signs
+    this.sx = this.dx >= 0 ? 1 : -1;
+    this.sy = this.dy >= 0 ? 1 : -1;
+    //coefficients
+    this.coefX = Math.abs(this.dx / this.dy);    
+    this.coefY = Math.abs(this.dy / this.dx);
+
     this.speed = 5;
+    this.d = 0;
 
     this.move = function(){
-        this.x += this.speed;
-        this.y += this.speed * this.coef;
+        if(this.coefX < this.coefY){
+            this.x += this.speed * this.sx * this.coefX;
+            this.y += this.speed * this.sy;
+        }else if(this.coefX > this.coefY){
+            this.x += this.speed * this.sx;
+            this.y += this.speed * this.sy * this.coefY;
+        }else{
+            this.x += this.speed * this.sx;
+            this.y += this.speed * this.sy;
+        }
+
+        this.d += this.speed;
     }
     
 }

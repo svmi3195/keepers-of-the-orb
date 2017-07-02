@@ -250,6 +250,8 @@ function pathfinderCleanUp(tilemap){
     tilemap.tiles[i].h = 0;
     tilemap.tiles[i].previous = undefined;
   }
-}
+};
+
+
 
 
