@@ -32,6 +32,7 @@ function Enemy (spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.texture = document.getElementById('enemy-1');
+    this.path = [];
 
     this.name = 'Enemy';
 

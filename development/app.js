@@ -22,7 +22,6 @@ function runGame(){
 
     var mage = new Mage(entrance);
     objectsManager.objects.push(mage);
-    var magePath = [];
 
     var orb = new Orb([(map.cols - 4) * map.tsize, Math.floor(map.rows/2) * map.tsize]);    
     objectsManager.objects.push(orb);
@@ -64,8 +63,8 @@ function runGame(){
     function gameLoop(){
 
         if(clicked.length == 2){
-            magePath = findPath(map, clicked[0], clicked[1]);
-            magePath.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
+            mage.path = findPath(map, clicked[0], clicked[1]);
+            mage.path.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
             clicked.shift();
         }
         
@@ -73,34 +72,34 @@ function runGame(){
                
         map.render();        
 
-        if(magePath.length > 0){
-            var mageStartX = transIndex1to2(magePath[magePath.length - 1], map)[0] * map.tsize;
-            var mageStartY = transIndex1to2(magePath[magePath.length - 1], map)[1] * map.tsize;
-            if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + 1){
+        if(mage.path.length > 0){
+            var mageStartX = transIndex1to2(mage.path[mage.path.length - 1], map)[0] * map.tsize;
+            var mageStartY = transIndex1to2(mage.path[mage.path.length - 1], map)[1] * map.tsize;
+            if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] + 1){
                 if(mage.x > mageStartX - 40){
                     mage.moveLeft();
                 }else{
-                    magePath.pop();
+                    mage.path.pop();
                 }  
-            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - 1){
+            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] - 1){
                 if(mage.x < mageStartX + 40){
                     mage.moveRight();
                 }else{
-                    magePath.pop();
+                    mage.path.pop();
                 }
-            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] - map.cols){
+            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] - map.cols){
                 if(mage.y < mageStartY + 40 - mage.tileOffsetY){
                     mage.moveDown();
                     objectsManager.sortObjects();
                 }else{
-                    magePath.pop();
+                    mage.path.pop();
                 }
-            }else if(magePath[magePath.length - 1] == magePath[magePath.length - 2] + map.cols){
+            }else if(mage.path[mage.path.length - 1] == mage.path[mage.path.length - 2] + map.cols){
                 if(mage.y > mageStartY - 40 - mage.tileOffsetY){
                     mage.moveUp();
                     objectsManager.sortObjects();
                 }else{
-                    magePath.pop();
+                    mage.path.pop();
                 }
             }
         };
