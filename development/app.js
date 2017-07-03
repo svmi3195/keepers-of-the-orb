@@ -46,8 +46,8 @@ function runGame(){
         if(event.ctrlKey){
             objectsManager.shoot(mage, [x,y]);
         }else{
-            if(tilemap.tiles[clickedTile].object){
-            ui.select(tilemap.tiles[clickedTile].object);
+            if(tilemap.tiles[clickedTile].object.length != 0){
+                ui.select(tilemap.tiles[clickedTile].object[0]);
             }
             if(ui.selected == mage){
                 clicked.push(clickedTile); 
@@ -66,7 +66,7 @@ function runGame(){
             clicked.shift();
         }
 
-        if(tilemap.tiles[entranceIndex].object == null && tilemap.tiles[entranceIndex + 1].object == null && Math.random() < 0.01){
+        if(tilemap.tiles[entranceIndex].object.length == 0 && tilemap.tiles[entranceIndex + 1].object.length == 0 && Math.random() < 0.01){
             objectsManager.spawnEnemy();
         }
 

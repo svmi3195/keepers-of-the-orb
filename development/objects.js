@@ -23,16 +23,16 @@ function ObjectsManager(context, tilemap){
         var index;
         for(var i = 0; i < this.objects.length; i++){
             index = transIndex2to1([this.objects[i].x / tilemap.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / tilemap.tsize], tilemap);
-            tilemap.tiles[index].object = this.objects[i];
+            tilemap.tiles[index].object.push(this.objects[i]);
         }
     };
 
     this.registerObj = function(obj, index){
-        tilemap.tiles[index].object = obj;
+        tilemap.tiles[index].object.push(obj);
     };
 
     this.unregisterObj = function(obj, index){
-        tilemap.tiles[index].object = null;
+        removeFromArray(tilemap.tiles[index].object, obj);
     };
 
     this.moveObj = function (obj){
@@ -104,29 +104,21 @@ function ObjectsManager(context, tilemap){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
-            }else if(tilemap.tiles[tile].object && tilemap.tiles[tile].object.name == 'Enemy'){
-                //add explosions!
-                removeFromArray(this.objects, tilemap.tiles[tile].object);
-                removeFromArray(this.movingObjects, tilemap.tiles[tile].object);
-                tilemap.tiles[tile].object = null;
-                removeFromArray(this.objects, this.movingParticles[j]);
-                this.movingParticles.splice(j, 1);                
-            }
+            }else if(tilemap.tiles[tile].object.length != 0){
 
-            /*
-
-            if(this.movingParticles[j].d > 100){
-                this.movingParticles.splice(j, 1);
-            }else{
-                this.movingParticles[j].move();
-        }
-
-                var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
-
-                if(tilemap.tiles[tile].object && tilemap.tiles[tile].object.name == 'Enemy'){
-                    this.movingParticles.splice(j, 1);
+                for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
+                    if(tilemap.tiles[tile].object[i].name == 'Enemy'){
+                        //add explosions!
+                        //check sprite collision detection
+                        removeFromArray(this.objects, tilemap.tiles[tile].object[i]);
+                        removeFromArray(this.movingObjects, tilemap.tiles[tile].object[i]);
+                        removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
+                        removeFromArray(this.objects, this.movingParticles[j]);
+                        this.movingParticles.splice(j, 1);    
+                    }
                 }
-        }*/            
+                            
+            }          
         }
     };
 
