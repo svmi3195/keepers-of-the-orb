@@ -14,7 +14,7 @@ function runGame(){
 
     var objectsManager = new ObjectsManager(ctx, tilemap);
 
-    var ui = new UI(tilemap);
+    var ui = new UI(tilemap, ctx);
 
     var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
     var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
@@ -77,7 +77,7 @@ function runGame(){
         objectsManager.moveAll();        
         objectsManager.renderAll();
 
-        ui.render(ctx);
+        ui.render();
 
         requestAnimationFrame(gameLoop);
     };
