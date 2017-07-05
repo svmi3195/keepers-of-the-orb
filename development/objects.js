@@ -105,7 +105,6 @@ function ObjectsManager(context, tilemap){
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length != 0){
-
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
                     if(tilemap.tiles[tile].object[i].name == 'Enemy'){
                         //add explosions!
@@ -114,7 +113,12 @@ function ObjectsManager(context, tilemap){
                         removeFromArray(this.movingObjects, tilemap.tiles[tile].object[i]);
                         removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.objects, this.movingParticles[j]);
-                        this.movingParticles.splice(j, 1);    
+                        this.movingParticles.splice(j, 1);
+                        for(var i =0; i < this.objects.length; i++){
+                            if(this.objects[i].name == 'Mage'){
+                                this.objects[i].frags++;
+                            }
+                        }
                     }
                 }
                             
@@ -186,6 +190,7 @@ function Mage (spawnPoint){
     this.shootingMode = true;
 
     this.name = 'Mage';
+    this.frags = 0;
 
     this.moveRight = function(){
         this.x += this.speed;

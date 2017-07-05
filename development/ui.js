@@ -25,7 +25,11 @@ function UI(tilemap, context){
         context.fillRect(this.x, this.y, this.width, this.height);
 
         if(this.selected){
-            this.drawText(this.selected.name);
+            var text = this.selected.name;
+            if(this.selected.hasOwnProperty('frags')){
+                text += ', frags count: ' + this.selected.frags;
+            }
+            this.drawText(text);
         }
         
     };
