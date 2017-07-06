@@ -1,5 +1,6 @@
 function ObjectsManager(context, tilemap){
     this.objects = [];
+    this.keepers = [];
     this.movingObjects = [];
     this.movingParticles = [];
 
@@ -114,9 +115,9 @@ function ObjectsManager(context, tilemap){
                         removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
-                        for(var i =0; i < this.objects.length; i++){
-                            if(this.objects[i].name == 'Mage'){
-                                this.objects[i].frags++;
+                        for(var i =0; i < this.keepers.length; i++){
+                            if(this.keepers[i].name == 'Mage'){
+                                this.keepers[i].frags++;
                             }
                         }
                     }

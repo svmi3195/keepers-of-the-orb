@@ -24,6 +24,7 @@ function runGame(){
     var mage = new Mage([1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize]);
     objectsManager.objects.push(mage);
     objectsManager.movingObjects.push(mage);
+    objectsManager.keepers.push(mage);
 
     var orb = new Orb(orbPos);    
     objectsManager.objects.push(orb);
