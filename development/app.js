@@ -17,38 +17,29 @@ function runGame(){
     var ui = new UI(tilemap, ctx);
 
     var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
-    var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
+    var magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
     var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
+
     var orbIndex = transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap);
+    var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
 
-    objectsManager.spawnObject(Mage, [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize]);
-
-    /*
-    var mage = new Mage([1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize]);
-    for(var i = 0; i < mage.tags.length; i++){
-        objectsManager[mage.tags[i]].push(mage);
-    }
-    */
-
-    var orb = new Orb(orbPos);    
-    objectsManager.objects.push(orb);
+    objectsManager.spawnObject(Mage, magePos);
+    objectsManager.spawnObject(Orb, orbPos);
 
     objectsManager.sortObjects();
     objectsManager.registerAll();
 
-    var projectile = new Projectile([0,0], [300, 300]);    
-
     //mouseclick event
-    canvas.addEventListener("mousedown", getClickedTile, false);
+    canvas.addEventListener("mousedown", clickHandler, false);
 
-    function getClickedTile(event){
+    function clickHandler(event){
         var x = event.clientX;
         var y = event.clientY;
         var clickedTile = transIndex2to1([Math.floor(x/tilemap.tsize), Math.floor(y/tilemap.tsize)], tilemap);
         console.log(tilemap.tiles[clickedTile]);
 
         if(event.ctrlKey){
-            objectsManager.shoot(mage, [x,y]);
+            objectsManager.shoot(objectsManager.keepers[0], [x,y]); //can later change to selected keeper, if add more
         }else{
             if(tilemap.tiles[clickedTile].object.length != 0){
                 ui.select(tilemap.tiles[clickedTile].object[0]);
@@ -63,7 +54,7 @@ function runGame(){
             }
         } 
         
-    };//end of mouse getClickedTile
+    };//end of mouse clickHandler
 
     gameLoop();
 

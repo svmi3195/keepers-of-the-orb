@@ -144,21 +144,23 @@ function ObjectsManager(context, tilemap){
     };//end of spawn enemy
 
     this.shoot = function(shooter, goal){
-        var projectile = new Projectile([shooter.x + 20, shooter.y + 20], goal);
-        this.objects.push(projectile);
-        this.movingParticles.push(projectile);
+        //var projectile = new Projectile([shooter.x + 20, shooter.y + 20], goal);
+        this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal);
     };
 
-    this.spawnObject = function(Constructor, spawnPoint){
+    this.spawnObject = function(Constructor, spawnPoint, goal){
 
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
-        var obj = new Constructor(spawnPoint);
+        var obj = new Constructor(spawnPoint, goal);
         for(var i = 0; i < obj.tags.length; i++){
             this[obj.tags[i]].push(obj);
         }
 
-        this.registerObj(obj, spawnIndex);
+        if(Constructor != Projectile){
+            this.registerObj(obj, spawnIndex);
+        }
+        
     }
 
 };//end of ObjectsManager
@@ -230,10 +232,12 @@ function Orb(spawnPoint){
     this.texture = document.getElementById('enemy-1');
 
     this.name = 'The orb';
+    this.tags = ['objects'];
 };
 
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
+    this.tags = ['objects', 'movingParticles'];
 
     this.x = fromPos[0];
     this.y = fromPos[1];
