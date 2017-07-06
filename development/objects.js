@@ -129,11 +129,6 @@ function ObjectsManager(context, tilemap){
 
     this.spawnEnemy = function(){
 
-        var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
-        var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
-        var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
-        var orbIndex = transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap);
-
         var enemy = new Enemy(entrancePos);
         this.objects.push(enemy);
         this.movingObjects.push(enemy);
@@ -150,6 +145,13 @@ function ObjectsManager(context, tilemap){
 
     this.spawnObject = function(Constructor, spawnPoint, goal){
 
+        var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        var magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
+        var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
+
+        if(Constructor == Enemy){
+            spawnPoint = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        }
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
         var obj = new Constructor(spawnPoint, goal);
@@ -157,11 +159,16 @@ function ObjectsManager(context, tilemap){
             this[obj.tags[i]].push(obj);
         }
 
+        if(Constructor == Enemy){
+            obj.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
+            obj.path.shift();
+        }
+
         if(Constructor != Projectile){
             this.registerObj(obj, spawnIndex);
         }
         
-    }
+    };//end of spawnObject
 
 };//end of ObjectsManager
 
@@ -175,6 +182,7 @@ function Enemy (spawnPoint){
     this.path = [];
 
     this.name = 'Enemy';
+    this.tags = ['objects', 'movingObjects'];
 
     this.moveRight = function(){
         this.x += this.speed;

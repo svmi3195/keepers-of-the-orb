@@ -61,7 +61,7 @@ function runGame(){
     function gameLoop(){
         
         if(tilemap.tiles[entranceIndex].object.length == 0 && tilemap.tiles[entranceIndex + 1].object.length == 0 && Math.random() < 0.01){
-            objectsManager.spawnEnemy();
+            objectsManager.spawnObject(Enemy);
         }
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
