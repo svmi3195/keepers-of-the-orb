@@ -149,6 +149,18 @@ function ObjectsManager(context, tilemap){
         this.movingParticles.push(projectile);
     };
 
+    this.spawnObject = function(Constructor, spawnPoint){
+
+        var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
+
+        var obj = new Constructor(spawnPoint);
+        for(var i = 0; i < obj.tags.length; i++){
+            this[obj.tags[i]].push(obj);
+        }
+
+        this.registerObj(obj, spawnIndex);
+    }
+
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
@@ -186,9 +198,11 @@ function Mage (spawnPoint){
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.texture = document.getElementById('mage-1');
     this.speed = 2;
+    this.waypoints = [];
     this.path = [];
     this.walkingMode = false;
     this.shootingMode = true;
+    this.tags = ['objects', 'movingObjects', 'keepers'];
 
     this.name = 'Mage';
     this.frags = 0;
