@@ -125,21 +125,9 @@ function ObjectsManager(context, tilemap){
                             
             }          
         }
-    };
-
-    this.spawnEnemy = function(){
-
-        var enemy = new Enemy(entrancePos);
-        this.objects.push(enemy);
-        this.movingObjects.push(enemy);
-        enemy.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
-        enemy.path.shift();
-
-        this.registerObj(enemy, entranceIndex);
-    };//end of spawn enemy
+    };    
 
     this.shoot = function(shooter, goal){
-        //var projectile = new Projectile([shooter.x + 20, shooter.y + 20], goal);
         this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal);
     };
 

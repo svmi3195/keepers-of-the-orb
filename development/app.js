@@ -27,7 +27,6 @@ function runGame(){
     objectsManager.spawnObject(Orb, orbPos);
 
     objectsManager.sortObjects();
-    objectsManager.registerAll();
 
     //mouseclick event
     canvas.addEventListener("mousedown", clickHandler, false);
