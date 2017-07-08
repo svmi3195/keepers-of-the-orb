@@ -26,6 +26,7 @@ function runGame(){
     objectsManager.spawnObject(Mage, magePos);
     objectsManager.spawnObject(Orb, orbPos);
     objectsManager.createMenhirs();
+    //objectsManager.createTests();
 
     objectsManager.sortObjects();
 
@@ -44,7 +45,7 @@ function runGame(){
             if(tilemap.tiles[clickedTile].object.length != 0){
                 ui.select(tilemap.tiles[clickedTile].object[0]);
             }
-            if(ui.selected.name == 'Mage'){//same code for other objects movable by player
+            if(ui.selected && ui.selected.name == 'Mage'){//same code for other objects movable by player
                 ui.selected.waypoints.push(clickedTile);
                 if(ui.selected.waypoints.length == 2){
                     ui.selected.path = findPath(tilemap, ui.selected.waypoints[0], ui.selected.waypoints[1]);

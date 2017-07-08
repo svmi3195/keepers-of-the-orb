@@ -100,7 +100,11 @@ function ObjectsManager(context, tilemap){
             if(this.movingParticles[j].x <= 5){
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
-            }else if(tilemap.tiles[tile].terrain == 'wall' || tilemap.tiles[tile].terrain == 'mountains'){
+            }else if(tilemap.tiles[tile].terrain == 'mountains'){
+                //add explosions!
+                removeFromArray(this.objects, this.movingParticles[j]);
+                this.movingParticles.splice(j, 1);                
+            }else if(tilemap.tiles[tile].object.length !=0 && tilemap.tiles[tile].object[0].name == 'Menhir'){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
@@ -160,9 +164,20 @@ function ObjectsManager(context, tilemap){
     this.createMenhirs = function(){
         for(var i = 0; i < tilemap.tiles.length; i++){
             if(!tilemap.tiles[i].blocked){
-                if(Math.random() < 0.1){
+                if(Math.random() < 0.05){
                     var spawnIndex = transIndex1to2(i, tilemap);                    
                     this.spawnObject(Menhir, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
+                }
+            }
+        }
+    };
+
+    this.createTests = function(){
+        for(var i = 0; i < tilemap.tiles.length; i++){
+            if(!tilemap.tiles[i].blocked){
+                if(Math.random() < 0.05){
+                    var spawnIndex = transIndex1to2(i, tilemap);                    
+                    this.spawnObject(Test, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
                 }
             }
         }
@@ -287,6 +302,17 @@ function Menhir(spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.name = 'Menhir';
+    this.sleeping = true;
+    this.blocking = true;
+};
+
+function Test(spawnPoint){
+    this.texture = document.getElementById('test-1');
+    this.tags = ['objects', 'staticObjects'];
+    this.tileOffsetY = this.texture.height - 40;
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.name = 'Test';
     this.sleeping = true;
     this.blocking = true;
 };
