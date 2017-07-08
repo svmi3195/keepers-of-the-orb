@@ -229,10 +229,12 @@ function findPath(tilemap, start, goal){
   }
 
     
-  //visualize path with blue rects:  
+  //visualize path with blue rects
+  /*  
   for(var p = 0; p < path.length; p++){
       tilemap.tiles[path[p]].terrain = 'path';
   }
+  */
   
   }
   

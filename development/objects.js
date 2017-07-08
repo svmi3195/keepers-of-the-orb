@@ -281,11 +281,11 @@ function Projectile(fromPos, toPos){
 };
 
 function Menhir(spawnPoint){
-    this.texture = document.getElementById('menhir-1');
+    this.texture = document.getElementById('menhir-' + (Math.floor(Math.random() * 1) + 1)); //multply by textures count
     this.tags = ['objects', 'staticObjects'];
+    this.tileOffsetY = 40;
     this.x = spawnPoint[0];
-    this.y = spawnPoint[1];
-    this.tileOffsetY = 0;
+    this.y = spawnPoint[1] - this.tileOffsetY;    
     this.name = 'Menhir';
     this.sleeping = true;
     this.blocking = true;
