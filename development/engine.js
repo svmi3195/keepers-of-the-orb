@@ -75,23 +75,11 @@ function Tilemap(canvas, context) {
                 var tile = this.getTile(c, r);
                 if (tile.terrain == 'grass') {
                     context.drawImage(this.grassTextures[tile.textureNum], c * this.tsize, r * this.tsize);
-                }else if (tile.terrain == 'wall'){
-                    //need to draw grass beneath if wall texture doesn't take all tile
-                    //context.drawImage(this.grassTextures[tile.textureNum], c * this.tsize, r * this.tsize);
-                    //context.drawImage(this.wallTextures[tile.textureNum], c * this.tsize, r * this.tsize);
-                    
-                    context.fillStyle = '#0d0d0d';   
-                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
-                    
                 }else if (tile.terrain == 'path'){
                     context.fillStyle = 'blue';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }else if (tile.terrain == 'mountains'){
                     context.drawImage(this.mountainsTextures[tile.textureNum], c * this.tsize, r * this.tsize);
-                  /*
-                    context.fillStyle = 'red';   
-                    context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
-                    */
                 }
             }
         }
@@ -108,7 +96,7 @@ function Tilemap(canvas, context) {
 
     this.update = function(index, strTerrain){
         this.tiles[index].terrain = strTerrain;
-        if(strTerrain == 'wall' || strTerrain == 'mountains'){
+        if(strTerrain == 'mountains'){
           this.tiles[index].blocked = true;
         }else{
           this.tiles[index].blocked = false;
@@ -118,11 +106,7 @@ function Tilemap(canvas, context) {
     this.populate = function(){
 
       for(var i = 0; i < this.tiles.length; i++){
-        if(Math.random() < 0.15){
-          this.update(i, 'wall');
-        }else{
-          this.update(i, 'grass');
-        }
+        this.update(i, 'grass');
       }
 
       for(var iTop = 0; iTop < this.cols; iTop++){

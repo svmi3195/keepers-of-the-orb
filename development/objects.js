@@ -2,6 +2,7 @@ function ObjectsManager(context, tilemap){
     this.objects = [];
     this.keepers = [];
     this.movingObjects = [];
+    this.staticObjects = [];
     this.movingParticles = [];
 
     this.renderObject = function(object){
@@ -22,10 +23,16 @@ function ObjectsManager(context, tilemap){
 
     this.registerObj = function(obj, index){
         tilemap.tiles[index].object.push(obj);
+        if(obj.blocking){
+            tilemap.tiles[index].blocked = true;
+        }        
     };
 
     this.unregisterObj = function(obj, index){
         removeFromArray(tilemap.tiles[index].object, obj);
+        if(obj.blocking){
+            tilemap.tiles[index].blocked = false;
+        }
     };
 
     this.moveObj = function (obj){
@@ -150,6 +157,17 @@ function ObjectsManager(context, tilemap){
         
     };//end of spawnObject
 
+    this.createMenhirs = function(){
+        for(var i = 0; i < tilemap.tiles.length; i++){
+            if(!tilemap.tiles[i].blocked){
+                if(Math.random() < 0.1){
+                    var spawnIndex = transIndex1to2(i, tilemap);                    
+                    this.spawnObject(Menhir, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
+                }
+            }
+        }
+    };
+
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
@@ -160,6 +178,7 @@ function Enemy (spawnPoint){
     this.texture = document.getElementById('enemy-1');
     this.speed = 1;
     this.path = [];
+    this.blocking = false;
 
     this.name = 'Enemy';
     this.tags = ['objects', 'movingObjects'];
@@ -193,6 +212,7 @@ function Mage (spawnPoint){
     this.walkingMode = false;
     this.shootingMode = true;
     this.tags = ['objects', 'movingObjects', 'keepers'];
+    this.blocking = false;
 
     this.name = 'Mage';
     this.frags = 0;
@@ -218,6 +238,7 @@ function Orb(spawnPoint){
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
+    this.blocking = false;
 
     this.name = 'The orb';
     this.tags = ['objects'];
@@ -257,4 +278,15 @@ function Projectile(fromPos, toPos){
         this.d += this.speed;
     }
     
-}
+};
+
+function Menhir(spawnPoint){
+    this.texture = document.getElementById('menhir-1');
+    this.tags = ['objects', 'staticObjects'];
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1];
+    this.tileOffsetY = 0;
+    this.name = 'Menhir';
+    this.sleeping = true;
+    this.blocking = true;
+};
