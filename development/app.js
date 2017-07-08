@@ -25,6 +25,7 @@ function runGame(){
 
     objectsManager.spawnObject(Mage, magePos);
     objectsManager.spawnObject(Orb, orbPos);
+    objectsManager.createStones();
     objectsManager.createMenhirs();
     //objectsManager.createTests();
 

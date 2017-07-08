@@ -66,7 +66,7 @@ function ObjectsManager(context, tilemap){
                             this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
                             this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
                         }
-                        this.sortObjects();
+                        //this.sortObjects();
                     }else{
                         obj.path.pop();
                     }
@@ -77,11 +77,12 @@ function ObjectsManager(context, tilemap){
                             this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
                             this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
                         }
-                        this.sortObjects();
+                        //this.sortObjects();
                     }else{
                         obj.path.pop();
                     }
                 }
+                this.sortObjects();
     };//end of moveObj
 
     this.moveAll = function(){        
@@ -104,7 +105,7 @@ function ObjectsManager(context, tilemap){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
-            }else if(tilemap.tiles[tile].object.length !=0 && tilemap.tiles[tile].object[0].name == 'Menhir'){
+            }else if(tilemap.tiles[tile].object.length !=0 && (tilemap.tiles[tile].object[0].name == 'Menhir' || tilemap.tiles[tile].object[0].name == 'Stone')){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
@@ -158,6 +159,8 @@ function ObjectsManager(context, tilemap){
         if(Constructor != Projectile){
             this.registerObj(obj, spawnIndex);
         }
+
+        this.sortObjects();
         
     };//end of spawnObject
 
@@ -167,6 +170,17 @@ function ObjectsManager(context, tilemap){
                 if(Math.random() < 0.05){
                     var spawnIndex = transIndex1to2(i, tilemap);                    
                     this.spawnObject(Menhir, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
+                }
+            }
+        }
+    };
+
+    this.createStones = function(){
+        for(var i = 0; i < tilemap.tiles.length; i++){
+            if(!tilemap.tiles[i].blocked){
+                if(Math.random() < 0.05){
+                    var spawnIndex = transIndex1to2(i, tilemap);                    
+                    this.spawnObject(Stone, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
                 }
             }
         }
@@ -262,6 +276,7 @@ function Orb(spawnPoint){
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
+    this.tileOffsetY = 0;
 
     this.x = fromPos[0];
     this.y = fromPos[1];
@@ -306,6 +321,17 @@ function Menhir(spawnPoint){
     this.blocking = true;
 };
 
+function Stone(spawnPoint){
+    this.texture = document.getElementById('stone-' + (Math.floor(Math.random() * 3) + 1)); //multply by textures count
+    this.tags = ['objects', 'staticObjects'];
+    this.tileOffsetY = this.texture.height - 40;
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.name = 'Stone';
+    this.blocking = true;
+};
+
+
 function Test(spawnPoint){
     this.texture = document.getElementById('test-1');
     this.tags = ['objects', 'staticObjects'];
@@ -313,6 +339,5 @@ function Test(spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.name = 'Test';
-    this.sleeping = true;
     this.blocking = true;
 };
