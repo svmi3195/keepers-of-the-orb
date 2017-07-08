@@ -18,15 +18,7 @@ function ObjectsManager(context, tilemap){
         this.objects.sort(function(a,b){
             return (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) != 0 ? (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) : (a.x) - (b.x) ;
         });
-    };
-
-    this.registerAll = function(){
-        var index;
-        for(var i = 0; i < this.objects.length; i++){
-            index = transIndex2to1([this.objects[i].x / tilemap.tsize, (this.objects[i].y + this.objects[i].tileOffsetY) / tilemap.tsize], tilemap);
-            tilemap.tiles[index].object.push(this.objects[i]);
-        }
-    };
+    };    
 
     this.registerObj = function(obj, index){
         tilemap.tiles[index].object.push(obj);

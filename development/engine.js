@@ -1,7 +1,7 @@
 function Tile(index, cols, rows){
    this.index = index;
    this.terrain = 'grass';
-   this.textureNum = Math.floor(Math.random() * 6);
+   this.textureNum = Math.floor(Math.random() * 6); //multiply by texture variations count
    this.object = [];
    this.f = 0;
    this.g = 0;
@@ -55,9 +55,14 @@ function Tilemap(canvas, context) {
         this.tiles.push(new Tile(i, this.cols, this.rows));
     };
 
-    this.textures = [];         
-    for(var j = 1; j <= 7; j++){ //change when have spritesheet
-        this.textures.push(document.getElementById(('grass-' + j)));
+    this.grassTextures = [];         
+    for(var j = 1; j <= 6; j++){ //change when have spritesheet
+        this.grassTextures.push(document.getElementById(('grass-' + j)));
+    }
+
+    this.mountainsTextures = [];         
+    for(var j = 1; j <= 6; j++){ //change when have spritesheet
+        this.mountainsTextures.push(document.getElementById(('mountains-' + j)));
     }
 
     this.getTile = function(col, row) {
@@ -69,16 +74,24 @@ function Tilemap(canvas, context) {
             for (var r = 0; r < this.rows; r++) {
                 var tile = this.getTile(c, r);
                 if (tile.terrain == 'grass') {
-                    context.drawImage(this.textures[tile.textureNum], c * this.tsize, r * this.tsize);
+                    context.drawImage(this.grassTextures[tile.textureNum], c * this.tsize, r * this.tsize);
                 }else if (tile.terrain == 'wall'){
+                    //need to draw grass beneath if wall texture doesn't take all tile
+                    //context.drawImage(this.grassTextures[tile.textureNum], c * this.tsize, r * this.tsize);
+                    //context.drawImage(this.wallTextures[tile.textureNum], c * this.tsize, r * this.tsize);
+                    
                     context.fillStyle = '#0d0d0d';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
+                    
                 }else if (tile.terrain == 'path'){
                     context.fillStyle = 'blue';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
                 }else if (tile.terrain == 'mountains'){
+                    context.drawImage(this.mountainsTextures[tile.textureNum], c * this.tsize, r * this.tsize);
+                  /*
                     context.fillStyle = 'red';   
                     context.fillRect(c * this.tsize, r * this.tsize, this.tsize, this.tsize);
+                    */
                 }
             }
         }
