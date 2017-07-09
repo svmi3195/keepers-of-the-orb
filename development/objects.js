@@ -165,7 +165,21 @@ function ObjectsManager(context, tilemap){
         }
 
         if(Constructor == Enemy){
-            obj.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize - 1, orbPos[1] / tilemap.tsize], tilemap));
+            //later may add paths to diagonals; maybe later rewrite using tilemap info
+            var paths = [];
+            //path to tile before orb
+            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize - 1, orbPos[1] / tilemap.tsize], tilemap)));
+            //path to tile above orb
+            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize - 1], tilemap)));
+            //path to tile beneath orb
+            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize + 1], tilemap)));
+            //path to tile after orb
+            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize + 1, orbPos[1] / tilemap.tsize], tilemap)));
+
+            paths.sort(function(a,b){
+                return a.length - b.length
+            })
+            obj.path = paths[0];
             obj.path.shift();
         }
 
