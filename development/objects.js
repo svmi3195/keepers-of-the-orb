@@ -136,8 +136,11 @@ function ObjectsManager(context, tilemap){
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
                     }
-                }
-                            
+                }                            
+            }else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
+                     Math.abs(this.movingParticles[j].y - this.movingParticles[j].goalY) < 3){
+                        removeFromArray(this.objects, this.movingParticles[j]);
+                        this.movingParticles.splice(j, 1);
             }          
         }
     };    
@@ -376,6 +379,10 @@ function Projectile(fromPos, toPos){
 
     this.x = fromPos[0];
     this.y = fromPos[1];
+
+    this.goalX = toPos[0];
+    this.goalY = toPos[1];
+
     //deltas
     this.dx = toPos[0] - fromPos[0];
     this.dy = toPos[1] - fromPos[1];
