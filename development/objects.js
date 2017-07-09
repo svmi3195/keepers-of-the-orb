@@ -25,17 +25,28 @@ function ObjectsManager(context, tilemap){
 
     this.registerObj = function(obj, index){
         tilemap.tiles[index].object.push(obj);
-        obj.tiles.push(index);
+        obj.index = index;
         if(obj.blocking){
             tilemap.tiles[index].blocked = true;
+        }
+        if(obj.double){
+            tilemap.tiles[index + 1].object.push(obj);
+            if(obj.blocking){
+                tilemap.tiles[index + 1].blocked = true;
+            }
         }        
     };
 
     this.unregisterObj = function(obj, index){
         removeFromArray(tilemap.tiles[index].object, obj);
-        removeFromArray(obj.tiles, index);
         if(obj.blocking){
             tilemap.tiles[index].blocked = false;
+        }
+        if(obj.double){
+            removeFromArray(tilemap.tiles[index + 1].object, obj);
+            if(obj.blocking){
+                tilemap.tiles[index + 1].blocked = false;
+            }
         }
     };
 
@@ -165,16 +176,10 @@ function ObjectsManager(context, tilemap){
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
         var obj = new Constructor(spawnPoint, goal);
-        var double = false;
 
         //if obj takes two tiles, but 2nd tile is blocked, re-roll obj
-        while(Constructor == Stone && obj.texture.width > 80 && tilemap.tiles[spawnIndex + 1].blocked){
+        while(obj.double && tilemap.tiles[spawnIndex + 1].blocked){
             obj = new Constructor(spawnPoint);
-        }
-
-        //for objects which take 2 tales on x-axis
-        if(Constructor == Stone && obj.texture.width > 80){            
-            double = true;
         }
 
         for(var i = 0; i < obj.tags.length; i++){
@@ -202,11 +207,6 @@ function ObjectsManager(context, tilemap){
 
         if(Constructor != Projectile){
             this.registerObj(obj, spawnIndex);
-
-            if(double == true){
-                this.registerObj(obj, spawnIndex + 1);
-                obj.tiles.push(spawnIndex + 1);
-            }
         }
 
         this.sortObjects();
@@ -249,7 +249,7 @@ function ObjectsManager(context, tilemap){
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
-    this.tiles =[];
+    this.index;
     this.hitpoints = 100;
     this.tileOffsetY = 0;
     this.x = spawnPoint[0];
@@ -258,6 +258,7 @@ function Enemy (spawnPoint){
     this.speed = 1;
     this.path = [];
     this.blocking = false;
+    this.double = false;
 
     this.name = 'Enemy';
     this.tags = ['objects', 'movingObjects'];
@@ -280,7 +281,7 @@ function Enemy (spawnPoint){
 };
 
 function Mage (spawnPoint){
-    this.tiles =[];
+    this.index;
     this.hitpoints = 300;
     this.tileOffsetY = 20; //sprite height is 60px vs 40px tile
     this.x = spawnPoint[0];
@@ -293,6 +294,7 @@ function Mage (spawnPoint){
     this.shootingMode = true;
     this.tags = ['objects', 'movingObjects', 'keepers'];
     this.blocking = true;
+    this.double = false;
 
     this.name = 'Mage';
     this.frags = 0;
@@ -313,7 +315,7 @@ function Mage (spawnPoint){
 };
 
 function Orb(spawnPoint){
-    this.tiles =[];
+    this.index;
     this.hitpoints = 300;
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
@@ -321,17 +323,18 @@ function Orb(spawnPoint){
     this.texture = document.getElementById('enemy-1');
     this.blocking = true;
     this.shootingRange = 1;
+    this.double = false;
 
     this.name = 'The orb';
     this.tags = ['objects', 'autoShooters'];
 };
 
 function Projectile(fromPos, toPos){
-    this.tiles =[];
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
     this.tileOffsetY = 0;
     this.blocking = false;
+    this.double = false;
 
     this.x = fromPos[0];
     this.y = fromPos[1];
@@ -366,7 +369,7 @@ function Projectile(fromPos, toPos){
 };
 
 function Menhir(spawnPoint){
-    this.tiles =[];
+    this.index;
     this.texture = document.getElementById('menhir-' + (Math.floor(Math.random() * 1) + 1)); //multply by textures count
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = 40;
@@ -375,10 +378,11 @@ function Menhir(spawnPoint){
     this.name = 'Menhir';
     this.sleeping = true;
     this.blocking = true;
+    this.double = false;
 };
 
 function Stone(spawnPoint){
-    this.tiles =[];
+    this.index;
     this.texture = document.getElementById('stone-' + (Math.floor(Math.random() * 3) + 1)); //multply by textures count
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
@@ -386,11 +390,12 @@ function Stone(spawnPoint){
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.name = 'Stone';
     this.blocking = true;
+    this.double = this.texture.width > 80;
 };
 
 
 function Test(spawnPoint){
-    this.tiles =[];
+    this.index;
     this.texture = document.getElementById('test-1');
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
@@ -398,4 +403,5 @@ function Test(spawnPoint){
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.name = 'Test';
     this.blocking = true;
+    this.double = this.texture.width > 80;
 };
