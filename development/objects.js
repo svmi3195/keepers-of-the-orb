@@ -126,20 +126,15 @@ function ObjectsManager(context, tilemap){
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length != 0){
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
-                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && this.movingParticles[j].enemies.includes('Enemy')){
+                    if(tilemap.tiles[tile].object[i].name == 'Enemy'){
                         //add explosions!
                         //check sprite collision detection
+                        this.movingParticles[j].shooter.frags++;
                         removeFromArray(this.objects, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.movingObjects, tilemap.tiles[tile].object[i]);
                         removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
-
-                        for(var i =0; i < this.keepers.length; i++){
-                            if(this.keepers[i].name == 'Mage'){
-                                this.keepers[i].frags++;
-                            }
-                        }
                     }
                 }
                             
@@ -241,11 +236,8 @@ function ObjectsManager(context, tilemap){
             obj.path.shift();
         }
 
-        if(Constructor == Projectile && (shooter.name == 'Mage' || shooter.name == 'The orb')){
-            obj.enemies.push('Enemy');
-        }else if(Constructor == Projectile && shooter.name == 'Enemy'){
-            obj.enemies.push('Mage');
-            obj.enemies.push('The orb');
+        if(Constructor == Projectile){
+            obj.shooter = shooter;
         }
 
         if(Constructor != Projectile){
@@ -305,7 +297,7 @@ function Enemy (spawnPoint){
     this.shootingRange = 2;
 
     this.name = 'Enemy';
-    this.tags = ['objects', 'movingObjects', 'autoShooters'];
+    this.tags = ['objects', 'movingObjects'];
 
     this.moveRight = function(){
         this.x += this.speed;
@@ -371,12 +363,13 @@ function Orb(spawnPoint){
 
     this.name = 'The orb';
     this.tags = ['objects', 'autoShooters'];
+    this.frags = 0;
 };
 
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
-    this.enemies = [];
+    this.shooter;
     this.tileOffsetY = 0;
     this.blocking = false;
     this.double = false;
