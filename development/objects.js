@@ -4,6 +4,7 @@ function ObjectsManager(context, tilemap){
     this.movingObjects = [];
     this.staticObjects = [];
     this.movingParticles = [];
+    this.autoShooters = [];
 
     this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
@@ -24,6 +25,7 @@ function ObjectsManager(context, tilemap){
 
     this.registerObj = function(obj, index){
         tilemap.tiles[index].object.push(obj);
+        obj.tiles.push(index);
         if(obj.blocking){
             tilemap.tiles[index].blocked = true;
         }        
@@ -31,6 +33,7 @@ function ObjectsManager(context, tilemap){
 
     this.unregisterObj = function(obj, index){
         removeFromArray(tilemap.tiles[index].object, obj);
+        removeFromArray(obj.tiles, index);
         if(obj.blocking){
             tilemap.tiles[index].blocked = false;
         }
@@ -136,6 +139,20 @@ function ObjectsManager(context, tilemap){
         this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal);
     };
 
+    this.processShooters = function(){
+        if(this.autoShooters.length == 0){
+            return -1;
+        }
+
+        var target = function(){
+            for(var i = 0; i < this.autoShooters.length; i++){
+                for(var j = 1; j <= this.autoShooters[i].range; j++){
+
+                }
+            }
+        }();
+    };
+
     this.spawnObject = function(Constructor, spawnPoint, goal){
 
         var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
@@ -186,12 +203,11 @@ function ObjectsManager(context, tilemap){
         if(Constructor != Projectile){
             this.registerObj(obj, spawnIndex);
 
-            if(double = true){
-            this.registerObj(obj, spawnIndex + 1);
+            if(double == true){
+                this.registerObj(obj, spawnIndex + 1);
+                obj.tiles.push(spawnIndex + 1);
+            }
         }
-        }
-
-        
 
         this.sortObjects();
         
@@ -233,6 +249,7 @@ function ObjectsManager(context, tilemap){
 };//end of ObjectsManager
 
 function Enemy (spawnPoint){
+    this.tiles =[];
     this.hitpoints = 100;
     this.tileOffsetY = 0;
     this.x = spawnPoint[0];
@@ -263,6 +280,7 @@ function Enemy (spawnPoint){
 };
 
 function Mage (spawnPoint){
+    this.tiles =[];
     this.hitpoints = 300;
     this.tileOffsetY = 20; //sprite height is 60px vs 40px tile
     this.x = spawnPoint[0];
@@ -295,18 +313,21 @@ function Mage (spawnPoint){
 };
 
 function Orb(spawnPoint){
+    this.tiles =[];
     this.hitpoints = 300;
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
     this.blocking = true;
+    this.shootingRange = 1;
 
     this.name = 'The orb';
-    this.tags = ['objects'];
+    this.tags = ['objects', 'autoShooters'];
 };
 
 function Projectile(fromPos, toPos){
+    this.tiles =[];
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
     this.tileOffsetY = 0;
@@ -345,6 +366,7 @@ function Projectile(fromPos, toPos){
 };
 
 function Menhir(spawnPoint){
+    this.tiles =[];
     this.texture = document.getElementById('menhir-' + (Math.floor(Math.random() * 1) + 1)); //multply by textures count
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = 40;
@@ -356,6 +378,7 @@ function Menhir(spawnPoint){
 };
 
 function Stone(spawnPoint){
+    this.tiles =[];
     this.texture = document.getElementById('stone-' + (Math.floor(Math.random() * 3) + 1)); //multply by textures count
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
@@ -367,6 +390,7 @@ function Stone(spawnPoint){
 
 
 function Test(spawnPoint){
+    this.tiles =[];
     this.texture = document.getElementById('test-1');
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
