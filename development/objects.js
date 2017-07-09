@@ -17,7 +17,8 @@ function ObjectsManager(context, tilemap){
 
     this.sortObjects = function(){
         this.objects.sort(function(a,b){
-            return (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) != 0 ? (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) : (a.x) - (b.x) ;
+			return (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) != 0 ? (a.y + a.tileOffsetY) - (b.y + b.tileOffsetY) : (a.x) - (b.x) ;
+			            
         });
     };    
 
@@ -147,6 +148,18 @@ function ObjectsManager(context, tilemap){
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
         var obj = new Constructor(spawnPoint, goal);
+        var double = false;
+
+        //if obj takes two tiles, but 2nd tile is blocked, re-roll obj
+        while(Constructor == Stone && obj.texture.width > 80 && tilemap.tiles[spawnIndex + 1].blocked){
+            obj = new Constructor(spawnPoint);
+        }
+
+        //for objects which take 2 tales on x-axis
+        if(Constructor == Stone && obj.texture.width > 80){            
+            double = true;
+        }
+
         for(var i = 0; i < obj.tags.length; i++){
             this[obj.tags[i]].push(obj);
         }
@@ -158,7 +171,13 @@ function ObjectsManager(context, tilemap){
 
         if(Constructor != Projectile){
             this.registerObj(obj, spawnIndex);
+
+            if(double = true){
+            this.registerObj(obj, spawnIndex + 1);
         }
+        }
+
+        
 
         this.sortObjects();
         
@@ -179,7 +198,7 @@ function ObjectsManager(context, tilemap){
         for(var i = 0; i < tilemap.tiles.length; i++){
             if(!tilemap.tiles[i].blocked){
                 if(Math.random() < 0.05){
-                    var spawnIndex = transIndex1to2(i, tilemap);                    
+                    var spawnIndex = transIndex1to2(i, tilemap);
                     this.spawnObject(Stone, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
                 }
             }
