@@ -165,7 +165,7 @@ function ObjectsManager(context, tilemap){
         }
 
         if(Constructor == Enemy){
-            obj.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap));
+            obj.path = findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize - 1, orbPos[1] / tilemap.tsize], tilemap));
             obj.path.shift();
         }
 
@@ -260,7 +260,7 @@ function Mage (spawnPoint){
     this.walkingMode = false;
     this.shootingMode = true;
     this.tags = ['objects', 'movingObjects', 'keepers'];
-    this.blocking = false;
+    this.blocking = true;
 
     this.name = 'Mage';
     this.frags = 0;
@@ -286,7 +286,7 @@ function Orb(spawnPoint){
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
-    this.blocking = false;
+    this.blocking = true;
 
     this.name = 'The orb';
     this.tags = ['objects'];
@@ -296,6 +296,7 @@ function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
     this.tileOffsetY = 0;
+    this.blocking = false;
 
     this.x = fromPos[0];
     this.y = fromPos[1];
