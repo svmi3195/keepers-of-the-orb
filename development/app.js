@@ -31,6 +31,8 @@ function runGame(){
 
     objectsManager.sortObjects();
 
+    objectsManager.processShooters();
+
     //mouseclick event
     canvas.addEventListener("mousedown", clickHandler, false);
 
