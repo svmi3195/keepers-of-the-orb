@@ -126,7 +126,7 @@ function ObjectsManager(context, tilemap){
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length != 0){
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
-                    if(tilemap.tiles[tile].object[i].name == 'Enemy'){
+                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && this.movingParticles[j].enemies.includes('Enemy')){
                         //add explosions!
                         //check sprite collision detection
                         removeFromArray(this.objects, tilemap.tiles[tile].object[i]);
@@ -134,6 +134,7 @@ function ObjectsManager(context, tilemap){
                         removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
+
                         for(var i =0; i < this.keepers.length; i++){
                             if(this.keepers[i].name == 'Mage'){
                                 this.keepers[i].frags++;
@@ -147,7 +148,7 @@ function ObjectsManager(context, tilemap){
     };    
 
     this.shoot = function(shooter, goal){
-        this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal);
+        this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal, shooter);
     };
 
     this.processShooters = function(){
@@ -155,41 +156,51 @@ function ObjectsManager(context, tilemap){
             return -1;
         }
 
-        var index = this.autoShooters[0].index;
-        var index2 = transIndex1to2(index, tilemap);
-        var obj = this.autoShooters[0];
+        for(var sIndex = 0; sIndex < this.autoShooters.length; sIndex++){
+            var index = this.autoShooters[sIndex].index;
+            var index2 = transIndex1to2(index, tilemap);
+            var obj = this.autoShooters[sIndex];
 
-        var target = function(){
-            for(var range = 1; range <= obj.shootingRange; range++){
-                var arr = [];
-                var boxSize = range * 2 + 1; //cols and rows count of selection
+            var enemyNames = [];
+            if(obj.name == 'The orb'){
+                enemyNames.push('Enemy');
+            }else if(obj.name == 'Enemy'){
+                enemyNames.push('The orb');
+                enemyNames.push('Mage');
+            }
 
-                //make array of tiles for checking
-                for(var y = -range; y <= range; y++){
-                    for(var x = 0; x < boxSize; x++){
-                        if(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap)){
-                            arr.push(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap));
+            var target = function(){
+                for(var range = 1; range <= obj.shootingRange; range++){
+                    var arr = [];
+                    var boxSize = range * 2 + 1; //cols and rows count of selection
+
+                    //make array of tiles for checking
+                    for(var y = -range; y <= range; y++){
+                        for(var x = 0; x < boxSize; x++){
+                            if(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap)){
+                                arr.push(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap));
+                            }
                         }
                     }
+
+                    //check array
+                    for(var i = 0; i < arr.length; i++){
+                        if(tilemap.tiles[arr[i]].object.length != 0 && enemyNames.includes(tilemap.tiles[arr[i]].object[0].name)){
+                            return arr[i];
+                        }
+                    }                               
                 }
+                return null;
+            }();
 
-                //check array
-                for(var i = 0; i < arr.length; i++){
-                    if(tilemap.tiles[arr[i]].object.length != 0 && tilemap.tiles[arr[i]].object[0].name == 'Enemy'){
-                        return arr[i];
-                    }
-                }                               
+            if(target){
+                var targetIndex2 = transIndex1to2(target, tilemap);
+                this.shoot(obj, [targetIndex2[0] * tilemap.tsize + tilemap.tsize/2, targetIndex2[1] * tilemap.tsize + tilemap.tsize/2]);
             }
-            return null;
-        }();
-
-        if(target){
-            var targetIndex2 = transIndex1to2(target, tilemap);
-            this.shoot(obj, [targetIndex2[0] * tilemap.tsize + tilemap.tsize/2, targetIndex2[1] * tilemap.tsize + tilemap.tsize/2]);
-        }
+        }        
     };
 
-    this.spawnObject = function(Constructor, spawnPoint, goal){
+    this.spawnObject = function(Constructor, spawnPoint, goal, shooter){
 
         var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
         var magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
@@ -228,6 +239,13 @@ function ObjectsManager(context, tilemap){
             })
             obj.path = paths[0];
             obj.path.shift();
+        }
+
+        if(Constructor == Projectile && (shooter.name == 'Mage' || shooter.name == 'The orb')){
+            obj.enemies.push('Enemy');
+        }else if(Constructor == Projectile && shooter.name == 'Enemy'){
+            obj.enemies.push('Mage');
+            obj.enemies.push('The orb');
         }
 
         if(Constructor != Projectile){
@@ -284,9 +302,10 @@ function Enemy (spawnPoint){
     this.path = [];
     this.blocking = false;
     this.double = false;
+    this.shootingRange = 2;
 
     this.name = 'Enemy';
-    this.tags = ['objects', 'movingObjects'];
+    this.tags = ['objects', 'movingObjects', 'autoShooters'];
 
     this.moveRight = function(){
         this.x += this.speed;
@@ -357,6 +376,7 @@ function Orb(spawnPoint){
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
     this.tags = ['objects', 'movingParticles'];
+    this.enemies = [];
     this.tileOffsetY = 0;
     this.blocking = false;
     this.double = false;
