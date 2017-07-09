@@ -31,8 +31,6 @@ function runGame(){
 
     objectsManager.sortObjects();
 
-    objectsManager.processShooters();
-
     //mouseclick event
     canvas.addEventListener("mousedown", clickHandler, false);
 
@@ -70,7 +68,8 @@ function runGame(){
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
                
-        tilemap.render();     
+        tilemap.render();
+        objectsManager.processShooters();     
 
         objectsManager.moveAll();        
         objectsManager.renderAll();

@@ -164,6 +164,7 @@ function ObjectsManager(context, tilemap){
                 var arr = [];
                 var boxSize = range * 2 + 1; //cols and rows count of selection
 
+                //make array of tiles for checking
                 for(var y = -range; y <= range; y++){
                     for(var x = 0; x < boxSize; x++){
                         if(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap)){
@@ -171,10 +172,21 @@ function ObjectsManager(context, tilemap){
                         }
                     }
                 }
-                console.log(arr)               
+
+                //check array
+                for(var i = 0; i < arr.length; i++){
+                    if(tilemap.tiles[arr[i]].object.length != 0 && tilemap.tiles[arr[i]].object[0].name == 'Enemy'){
+                        return arr[i];
+                    }
+                }                               
             }
-            
+            return null;
         }();
+
+        if(target){
+            var targetIndex2 = transIndex1to2(target, tilemap);
+            this.shoot(obj, [targetIndex2[0] * tilemap.tsize + tilemap.tsize/2, targetIndex2[1] * tilemap.tsize + tilemap.tsize/2]);
+        }
     };
 
     this.spawnObject = function(Constructor, spawnPoint, goal){
@@ -335,7 +347,7 @@ function Orb(spawnPoint){
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
     this.blocking = true;
-    this.shootingRange = 5;
+    this.shootingRange = 2;
     this.double = false;
 
     this.name = 'The orb';
