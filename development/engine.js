@@ -251,10 +251,16 @@ function pathfinderCleanUp(tilemap){
   }
 };
 
-function doRectsCollide(a, b){
-  if(a.x > b.x && a.x < b.x + b.width && a.y > b.y && a.y < b.y + b.height){
+function rectsCollision(a, b){
+  if(a.x + a.width >= b.x && a.x <= b.x + b.width && a.y + a.height >= b.y && a.y < b.y + b.height ){
     return true;
-  }else if(b.x > a.x && b.x < a.x + a.width && b.y > a.y && b.y < a.y + a.height){
+  }else{
+    return false;
+  }
+};
+
+function rectPointCollision(rect, point){
+  if(point.x > rect.x && point.x < rect.x + rect.width && point.y > rect.y && point.y < rect.y + rect.height){
     return true;
   }else{
     return false;
