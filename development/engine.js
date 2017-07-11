@@ -251,6 +251,15 @@ function pathfinderCleanUp(tilemap){
   }
 };
 
+function doRectsCollide(a, b){
+  if(a.x > b.x && a.x < b.x + b.width && a.y > b.y && a.y < b.y + b.height){
+    return true;
+  }else if(b.x > a.x && b.x < a.x + a.width && b.y > a.y && b.y < a.y + a.height){
+    return true;
+  }else{
+    return false;
+  }
+};
 
 
 

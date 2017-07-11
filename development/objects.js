@@ -137,7 +137,9 @@ function ObjectsManager(context, tilemap){
                         this.movingParticles.splice(j, 1);
                     }
                 }                            
-            }else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
+            }
+            //for stopping projectile at its goal
+            else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
                      Math.abs(this.movingParticles[j].y - this.movingParticles[j].goalY) < 3){
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
@@ -290,9 +292,11 @@ function Enemy (spawnPoint){
     this.index;
     this.hitpoints = 100;
     this.tileOffsetY = 0;
+    this.texture = document.getElementById('enemy-1');
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
-    this.texture = document.getElementById('enemy-1');
+    this.width = this.texture.width;
+    this.height = this.texture.height;    
     this.speed = 1;
     this.path = [];
     this.blocking = false;
@@ -326,6 +330,8 @@ function Mage (spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1] - this.tileOffsetY;    
     this.texture = document.getElementById('mage-1');
+    this.width = this.texture.width;
+    this.height = this.texture.height;
     this.speed = 2;
     this.waypoints = [];
     this.path = [];
@@ -360,6 +366,8 @@ function Orb(spawnPoint){
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
+    this.width = this.texture.width;
+    this.height = this.texture.height;
     this.blocking = true;
     this.shootingRange = 2;
     this.double = false;
@@ -371,6 +379,8 @@ function Orb(spawnPoint){
 
 function Projectile(fromPos, toPos){
     this.texture = document.getElementById('projectile-1');
+    this.width = this.texture.width;
+    this.height = this.texture.height;
     this.tags = ['objects', 'movingParticles'];
     this.shooter;
     this.tileOffsetY = 0;
@@ -419,7 +429,9 @@ function Menhir(spawnPoint){
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = 40;
     this.x = spawnPoint[0];
-    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.y = spawnPoint[1] - this.tileOffsetY;
+    this.width = this.texture.width;
+    this.height = this.texture.height;    
     this.name = 'Menhir';
     this.sleeping = true;
     this.blocking = true;
@@ -432,7 +444,9 @@ function Stone(spawnPoint){
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
     this.x = spawnPoint[0];
-    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.y = spawnPoint[1] - this.tileOffsetY;
+    this.width = this.texture.width;
+    this.height = this.texture.height;    
     this.name = 'Stone';
     this.blocking = true;
     this.double = this.texture.width > 80;
@@ -445,7 +459,9 @@ function Test(spawnPoint){
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = this.texture.height - 40;
     this.x = spawnPoint[0];
-    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.y = spawnPoint[1] - this.tileOffsetY;
+    this.width = this.texture.width;
+    this.height = this.texture.height;    
     this.name = 'Test';
     this.blocking = true;
     this.double = this.texture.width > 80;
