@@ -126,7 +126,7 @@ function ObjectsManager(context, tilemap){
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length != 0){
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
-                    if(tilemap.tiles[tile].object[i].name == 'Enemy'){
+                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && rectsCollision(tilemap.tiles[tile].object[i], this.movingParticles[j])){
                         //add explosions!
                         //check sprite collision detection
                         this.movingParticles[j].shooter.frags++;
