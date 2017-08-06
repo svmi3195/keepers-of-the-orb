@@ -24,6 +24,7 @@ function ObjectsManager(context, tilemap){
     };    
 
     this.registerObj = function(obj, index){
+        //prevent from registering multiple times for same tile
         if(tilemap.tiles[index].object.includes(obj)){
             return 0;
         }
@@ -59,43 +60,25 @@ function ObjectsManager(context, tilemap){
 
                 if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + 1){
                     if(obj.x > startX - 40){
-                        obj.moveLeft();
-                        if(obj.x % tilemap.tsize >= 0.5){
-                            this.unregisterObj(obj, transIndex2to1([Math.ceil(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
-                            this.registerObj(obj, transIndex2to1([Math.floor(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
-                        }
+                        obj.moveLeft();                        
                     }else{
                         obj.path.pop();
                     }  
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - 1){
                     if(obj.x < startX + 40){
-                        obj.moveRight();
-                        if(obj.x % tilemap.tsize >= 0.5){
-                            this.unregisterObj(obj, transIndex2to1([Math.floor(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
-                            this.registerObj(obj, transIndex2to1([Math.ceil(obj.x / tilemap.tsize), (obj.y + obj.tileOffsetY) / tilemap.tsize], tilemap));
-                        }
+                        obj.moveRight();                        
                     }else{
                         obj.path.pop();
                     }
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] - tilemap.cols){
                     if(obj.y < startY + 40 - obj.tileOffsetY){
-                        obj.moveDown();
-                        if(obj.y % tilemap.tsize >= 0.5){
-                            this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
-                            this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
-                        }
-                        //this.sortObjects();
+                        obj.moveDown();                        
                     }else{
                         obj.path.pop();
                     }
                 }else if(obj.path[obj.path.length - 1] == obj.path[obj.path.length - 2] + tilemap.cols){
                     if(obj.y > startY - 40 - obj.tileOffsetY){
                         obj.moveUp();
-                        if(obj.y % tilemap.tsize >= 0.5){
-                            this.unregisterObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.ceil((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
-                            this.registerObj(obj, transIndex2to1([obj.x / tilemap.tsize, Math.floor((obj.y + obj.tileOffsetY) / tilemap.tsize)], tilemap));
-                        }
-                        //this.sortObjects();
                     }else{
                         obj.path.pop();
                     }
@@ -112,60 +95,39 @@ function ObjectsManager(context, tilemap){
 
         for(var j = this.movingParticles.length - 1; j >=0 ; j--){
 
-            var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
+            var particle = this.movingParticles[j];
+            var tile = transIndex2to1([Math.floor(particle.x / tilemap.tsize), Math.floor(particle.y / tilemap.tsize)], tilemap);
 
-            if(this.movingParticles[j].x <= 5){
-                removeFromArray(this.objects, this.movingParticles[j]);
+            if(particle.x <= 5){
+                removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].terrain == 'mountains'){
                 //add explosions!
-                removeFromArray(this.objects, this.movingParticles[j]);
+                removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length !=0 && (tilemap.tiles[tile].object[0].name == 'Menhir' || tilemap.tiles[tile].object[0].name == 'Stone')){
                 //add explosions!
-                removeFromArray(this.objects, this.movingParticles[j]);
+                removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
-        }else if(tilemap.tiles[tile].object.length != 0){
-                for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
-                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && rectsCollision(this.movingParticles[j], tilemap.tiles[tile].object[i])){
-                        //add explosions!
-                        //check sprite collision detection
-                        
-                        console.log(rectsCollision(this.movingParticles[j], tilemap.tiles[tile].object[i]))
-
-                        this.movingParticles[j].shooter.frags++;
-                        removeFromArray(this.objects, tilemap.tiles[tile].object[i]);
-                        removeFromArray(this.movingObjects, tilemap.tiles[tile].object[i]);
-                        removeFromArray(tilemap.tiles[tile].object, tilemap.tiles[tile].object[i]);
-                        removeFromArray(this.objects, this.movingParticles[j]);
+            }else if(Math.abs(particle.x - particle.goalX) < 3 &&
+                     Math.abs(particle.y - particle.goalY) < 3){
+                        removeFromArray(this.objects, particle);
+                        this.movingParticles.splice(j, 1);
+            }else if(this.movingObjects.length != 0){
+                for(var i = this.movingObjects.length - 1; i >= 0; i--){
+                    var obj = this.movingObjects[i];
+                    if(obj.name == 'Enemy' && rectsCollision(obj, particle)){
+                        particle.shooter.frags++;
+                        removeFromArray(this.objects, obj);
+                        removeFromArray(this.movingObjects, obj);
+                        removeFromArray(this.objects, particle);
                         this.movingParticles.splice(j, 1);
                     }
-                }                            
-           }
-            //for stopping projectile at its goal
-            else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
-                     Math.abs(this.movingParticles[j].y - this.movingParticles[j].goalY) < 3){
-                        removeFromArray(this.objects, this.movingParticles[j]);
-                        this.movingParticles.splice(j, 1);
-            }
-
-            /*
-            if(this.movingObjects.length != 0){
-                for(var e = this.movingObjects.length - 1; e <= 0; e--){
-                    console.log(this.movingObjects[e])
-                if(this.movingObjects[e].name == 'Enemy' && rectsCollision(this.movingObjects[e], this.movingParticles[j])){
-                    this.movingParticles[j].shooter.frags++;
-                    removeFromArray(this.objects, this.movingObjects[e]);
-                    removeFromArray(this.movingObjects, this.movingObjects[e]);
-                    removeFromArray(this.objects, this.movingParticles[j]);
-                    this.movingParticles.splice(j, 1);
                 }
             }
-            }
-            */
 
-            if(this.movingParticles[j]){
-                this.movingParticles[j].move(); 
+            if(particle){
+                particle.move(); 
             }
                      
         }
@@ -269,7 +231,7 @@ function ObjectsManager(context, tilemap){
             obj.shooter = shooter;
         }
 
-        if(Constructor != Projectile){
+        if(Constructor == Menhir || Constructor == Stone || Constructor == Orb){
             this.registerObj(obj, spawnIndex);
         }
 

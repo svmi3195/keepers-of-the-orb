@@ -35,16 +35,22 @@ function runGame(){
     canvas.addEventListener("mousedown", clickHandler, false);
 
     function clickHandler(event){
-        var x = event.clientX;
-        var y = event.clientY;
-        var clickedTile = transIndex2to1([Math.floor(x/tilemap.tsize), Math.floor(y/tilemap.tsize)], tilemap);
+        var xClicked = event.clientX;
+        var yClicked = event.clientY;
+        var clickedTile = transIndex2to1([Math.floor(xClicked/tilemap.tsize), Math.floor(yClicked/tilemap.tsize)], tilemap);
         console.log(tilemap.tiles[clickedTile]);
 
         if(event.ctrlKey){
-            objectsManager.shoot(objectsManager.keepers[0], [x,y]); //can later change to selected keeper, if add more
+            objectsManager.shoot(objectsManager.keepers[0], [xClicked,yClicked]); //can later change to selected keeper, if add more
         }else{
             if(tilemap.tiles[clickedTile].object.length != 0){
                 ui.select(tilemap.tiles[clickedTile].object[0]);
+            }else if(objectsManager.movingObjects.length !=0){
+                for(var i = 0; i < objectsManager.movingObjects.length; i++){
+                    if(rectPointCollision(objectsManager.movingObjects[i], {x: xClicked, y: yClicked})){
+                        ui.select(objectsManager.movingObjects[i]);
+                    }
+                }
             }
             if(ui.selected && ui.selected.name == 'Mage'){//same code for other objects movable by player
                 ui.selected.waypoints.push(clickedTile);
@@ -62,7 +68,7 @@ function runGame(){
 
     function gameLoop(){
         
-        if(tilemap.tiles[entranceIndex].object.length == 0 && tilemap.tiles[entranceIndex + 1].object.length == 0 && Math.random() < 0.01){
+        if(objectsManager.movingObjects[objectsManager.movingObjects.length - 1].x > 100 && Math.random() < 0.01){
             objectsManager.spawnObject(Enemy);
         }
 
