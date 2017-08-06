@@ -134,18 +134,34 @@ function ObjectsManager(context, tilemap){
     };    
 
     this.shoot = function(shooter, goal){
-        this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal, shooter);
+        if(shooter.readyToShoot){
+            this.spawnObject(Projectile, [shooter.x + 20, shooter.y + 20], goal, shooter);
+
+            if(shooter.name != 'Mage'){
+                shooter.readyToShoot = false;
+                shooter.lastTimeShoot = Date.now();
+            }            
+        }
     };
 
     this.processShooters = function(){
+
         if(this.autoShooters.length == 0){
             return -1;
         }
 
-        for(var sIndex = 0; sIndex < this.autoShooters.length; sIndex++){
-            var index = this.autoShooters[sIndex].index;
-            var index2 = transIndex1to2(index, tilemap);
-            var obj = this.autoShooters[sIndex];
+        for(var i = 0; i < this.autoShooters.length; i++){
+
+            var obj = this.autoShooters[i];
+
+            //check readyness
+            if(!obj.readyToShoot){
+                if(Date.now() - obj.lastTimeShoot < 3000){
+                    return -1;
+                }else{
+                    obj.readyToShoot = true;
+                }
+            };
 
             var enemyNames = [];
             if(obj.name == 'The orb'){
@@ -153,37 +169,28 @@ function ObjectsManager(context, tilemap){
             }else if(obj.name == 'Enemy'){
                 enemyNames.push('The orb');
                 enemyNames.push('Mage');
-            }
+            };
 
-            var target = function(){
-                for(var range = 1; range <= obj.shootingRange; range++){
-                    var arr = [];
-                    var boxSize = range * 2 + 1; //cols and rows count of selection
+            var objSightField = {
+                x: obj.x - obj.shootingRange,
+                y: obj.y - obj.shootingRange,
+                width: obj.width + obj.shootingRange,
+                height: obj.height + obj.shootingRange,
+            };
 
-                    //make array of tiles for checking
-                    for(var y = -range; y <= range; y++){
-                        for(var x = 0; x < boxSize; x++){
-                            if(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap)){
-                                arr.push(transIndex2to1([index2[0] - range + x, index2[1] + y], tilemap));
-                            }
-                        }
-                    }
+            var target = null;
 
-                    //check array
-                    for(var i = 0; i < arr.length; i++){
-                        if(tilemap.tiles[arr[i]].object.length != 0 && enemyNames.includes(tilemap.tiles[arr[i]].object[0].name)){
-                            return arr[i];
-                        }
-                    }                               
+            for(var j = this.movingObjects.length - 1; j >= 0; j--){
+                var moving = this.movingObjects[j];
+                if(rectsCollision(moving, objSightField) && enemyNames.includes(moving.name)){
+                    target = moving;    
                 }
-                return null;
-            }();
+            }
 
             if(target){
-                var targetIndex2 = transIndex1to2(target, tilemap);
-                this.shoot(obj, [targetIndex2[0] * tilemap.tsize + tilemap.tsize/2, targetIndex2[1] * tilemap.tsize + tilemap.tsize/2]);
+                this.shoot(obj, [target.x + Math.floor(target.width / 2), target.y + Math.floor(target.height / 2)]);
             }
-        }        
+        }                
     };
 
     this.spawnObject = function(Constructor, spawnPoint, goal, shooter){

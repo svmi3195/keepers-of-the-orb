@@ -68,7 +68,7 @@ function runGame(){
 
     function gameLoop(){
         
-        if(objectsManager.movingObjects[objectsManager.movingObjects.length - 1].x > 100 && Math.random() < 0.01){
+        if(objectsManager.movingObjects[objectsManager.movingObjects.length - 1].x > 50 && Math.random() < 0.01){
             objectsManager.spawnObject(Enemy);
         }
 

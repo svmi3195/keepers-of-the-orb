@@ -1,5 +1,3 @@
-
-
 function Enemy (spawnPoint){
     this.index;
     this.hitpoints = 100;
@@ -14,6 +12,9 @@ function Enemy (spawnPoint){
     this.blocking = false;
     this.double = false;
     this.shootingRange = 2;
+
+    this.lastTimeShoot = 0;
+    this.readyToShoot = true;
 
     this.name = 'Enemy';
     this.tags = ['objects', 'movingObjects'];
@@ -53,6 +54,9 @@ function Mage (spawnPoint){
     this.blocking = true;
     this.double = false;
 
+    this.lastTimeShoot = 0;
+    this.readyToShoot = true;
+
     this.name = 'Mage';
     this.frags = 0;
 
@@ -83,6 +87,9 @@ function Orb(spawnPoint){
     this.blocking = true;
     this.shootingRange = 2;
     this.double = false;
+
+    this.lastTimeShoot = 0;
+    this.readyToShoot = true;
 
     this.name = 'The orb';
     this.tags = ['objects', 'autoShooters'];
