@@ -24,6 +24,9 @@ function ObjectsManager(context, tilemap){
     };    
 
     this.registerObj = function(obj, index){
+        if(tilemap.tiles[index].object.includes(obj)){
+            return 0;
+        }
         tilemap.tiles[index].object.push(obj);
         obj.index = index;
         if(obj.blocking){
@@ -122,7 +125,7 @@ function ObjectsManager(context, tilemap){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
-        }/*else if(tilemap.tiles[tile].object.length != 0){
+        }else if(tilemap.tiles[tile].object.length != 0){
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
                     if(tilemap.tiles[tile].object[i].name == 'Enemy' && rectsCollision(this.movingParticles[j], tilemap.tiles[tile].object[i])){
                         //add explosions!
@@ -138,7 +141,7 @@ function ObjectsManager(context, tilemap){
                         this.movingParticles.splice(j, 1);
                     }
                 }                            
-           }*/
+           }
             //for stopping projectile at its goal
             else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
                      Math.abs(this.movingParticles[j].y - this.movingParticles[j].goalY) < 3){
