@@ -18,8 +18,10 @@
   "homepage": "https://github.com/svmi3195/keepers-of-the-orb#readme",
   "devDependencies": {
     "chai": "^4.0.2",
+    "express": "^4.15.3",
     "gulp": "^3.9.1",
     "gulp-uglify": "^2.1.2",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "pump": "^1.0.2"
   }
 }

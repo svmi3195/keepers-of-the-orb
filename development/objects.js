@@ -109,8 +109,6 @@ function ObjectsManager(context, tilemap){
 
         for(var j = this.movingParticles.length - 1; j >=0 ; j--){
 
-            this.movingParticles[j].move();
-
             var tile = transIndex2to1([Math.floor(this.movingParticles[j].x / tilemap.tsize), Math.floor(this.movingParticles[j].y / tilemap.tsize)], tilemap);
 
             if(this.movingParticles[j].x <= 5){
@@ -124,11 +122,14 @@ function ObjectsManager(context, tilemap){
                 //add explosions!
                 removeFromArray(this.objects, this.movingParticles[j]);
                 this.movingParticles.splice(j, 1);                
-            }else if(tilemap.tiles[tile].object.length != 0){
+        }/*else if(tilemap.tiles[tile].object.length != 0){
                 for(var i = 0; i < tilemap.tiles[tile].object.length; i++){
-                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && rectsCollision(tilemap.tiles[tile].object[i], this.movingParticles[j])){
+                    if(tilemap.tiles[tile].object[i].name == 'Enemy' && rectsCollision(this.movingParticles[j], tilemap.tiles[tile].object[i])){
                         //add explosions!
                         //check sprite collision detection
+                        
+                        console.log(rectsCollision(this.movingParticles[j], tilemap.tiles[tile].object[i]))
+
                         this.movingParticles[j].shooter.frags++;
                         removeFromArray(this.objects, tilemap.tiles[tile].object[i]);
                         removeFromArray(this.movingObjects, tilemap.tiles[tile].object[i]);
@@ -137,13 +138,33 @@ function ObjectsManager(context, tilemap){
                         this.movingParticles.splice(j, 1);
                     }
                 }                            
-            }
+           }*/
             //for stopping projectile at its goal
             else if(Math.abs(this.movingParticles[j].x - this.movingParticles[j].goalX) < 3 &&
                      Math.abs(this.movingParticles[j].y - this.movingParticles[j].goalY) < 3){
                         removeFromArray(this.objects, this.movingParticles[j]);
                         this.movingParticles.splice(j, 1);
-            }          
+            }
+
+            /*
+            if(this.movingObjects.length != 0){
+                for(var e = this.movingObjects.length - 1; e <= 0; e--){
+                    console.log(this.movingObjects[e])
+                if(this.movingObjects[e].name == 'Enemy' && rectsCollision(this.movingObjects[e], this.movingParticles[j])){
+                    this.movingParticles[j].shooter.frags++;
+                    removeFromArray(this.objects, this.movingObjects[e]);
+                    removeFromArray(this.movingObjects, this.movingObjects[e]);
+                    removeFromArray(this.objects, this.movingParticles[j]);
+                    this.movingParticles.splice(j, 1);
+                }
+            }
+            }
+            */
+
+            if(this.movingParticles[j]){
+                this.movingParticles[j].move(); 
+            }
+                     
         }
     };    
 
@@ -297,7 +318,7 @@ function Enemy (spawnPoint){
     this.y = spawnPoint[1];
     this.width = this.texture.width;
     this.height = this.texture.height;    
-    this.speed = 1;
+    this.speed = 0.5;
     this.path = [];
     this.blocking = false;
     this.double = false;
