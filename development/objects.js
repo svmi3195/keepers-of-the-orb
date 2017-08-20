@@ -85,7 +85,7 @@ function Orb(spawnPoint){
     this.width = this.texture.width;
     this.height = this.texture.height;
     this.blocking = true;
-    this.shootingRange = 2;
+    this.shootingRange = 1;
     this.double = false;
 
     this.lastTimeShoot = 0;
