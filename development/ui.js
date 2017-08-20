@@ -39,12 +39,16 @@ function UI(tilemap, context){
             var text = this.selected.name;            
             this.drawText(text);
 			
-			if(this.selected.name == 'Mage'){
-				this.drawButtons(['shoot', 'go', 'rune']);
+			if(this.selected.name == 'Mage' && this.buttons.length == 0){
+				this.createButtons(['shoot', 'go', 'rune']);
+			}else if (this.selected.name != 'Mage'){
+				this.buttons = [];
 			}
         }
-        
 		
+		if(this.buttons.length != 0){
+			this.drawButtons();
+		}
     };
 
     this.drawText = function(text){
@@ -53,18 +57,25 @@ function UI(tilemap, context){
         context.fillText(text, this.x + 10, this.y + 22);
     };
 	
-	this.drawButtons = function(buttons){
+	this.createButtons = function(buttons){
 		for(var i = 0; i < buttons.length; i++){
 			var btn = new Button(buttons[i], [this.x + this.width + i * 35 + 5, this.y]);
-			this.buttons.push(btn);
-			context.drawImage(btn.texture, btn.x, btn.y);
+			this.buttons.push(btn);			
 		}
-	};    
+	};
+
+	this.drawButtons = function(){
+		for(var i = 0; i < this.buttons.length; i++){
+			context.drawImage(this.buttons[i].texture, this.buttons[i].x, this.buttons[i].y);
+		}
+	}
 };
 
 function Button(type, spawnPoint){
+	this.texture = document.getElementById('button-' + type);
 	this.x = spawnPoint[0];
 	this.y = spawnPoint[1];
-	this.type = type;
-	this.texture = document.getElementById('button-' + type);
+	this.width = this.texture.width;
+    this.height = this.texture.height;
+	this.type = type;	
 }

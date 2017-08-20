@@ -62,7 +62,13 @@ function runGame(){
 					}
                     
                 } 
-            }
+            }else if(ui.selected && ui.selected.name == 'Mage'){
+				for(var i = 0; i < ui.buttons.length; i++){
+                    if(rectPointCollision(ui.buttons[i], {x: xClicked, y: yClicked})){
+                        console.log(ui.buttons[i].type)
+                    }
+                }
+			}
         } 
         
     };//end of mouse clickHandler
