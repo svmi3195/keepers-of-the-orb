@@ -12,7 +12,7 @@ function ObjectsManager(context, tilemap){
 
     this.renderAll = function(){
         for(var i = 0; i < this.objects.length; i++){
-            context.drawImage(this.objects[i].texture, this.objects[i].x, this.objects[i].y);
+			context.drawImage(this.objects[i].texture, this.objects[i].x, this.objects[i].y);
         }
     };
 

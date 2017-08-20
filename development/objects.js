@@ -97,7 +97,15 @@ function Orb(spawnPoint){
 };
 
 function Projectile(fromPos, toPos){
-    this.texture = document.getElementById('projectile-1');
+	this.name = 'Projectile';
+	this.textures = [];
+	this.textures.push(document.getElementById('projectile-fire-1'));
+	this.textures.push(document.getElementById('projectile-frost-1'));
+	this.textures.push(document.getElementById('projectile-poison-1'));
+	this.textures.push(document.getElementById('projectile-magic-1'));
+	this.textures.push(document.getElementById('projectile-dark-1'));
+	this.textures.push(document.getElementById('projectile-light-1'));
+    this.texture = this.textures[Math.floor(Math.random() * this.textures.length)];
     this.width = this.texture.width;
     this.height = this.texture.height;
     this.tags = ['objects', 'movingParticles'];
@@ -108,6 +116,9 @@ function Projectile(fromPos, toPos){
 
     this.x = fromPos[0];
     this.y = fromPos[1];
+	
+	this.prevX = this.x;
+	this.prevY = this.y;
 
     this.goalX = toPos[0];
     this.goalY = toPos[1];
@@ -122,10 +133,11 @@ function Projectile(fromPos, toPos){
     this.coefX = Math.abs(this.dx / this.dy);    
     this.coefY = Math.abs(this.dy / this.dx);
 
-    this.speed = 5;
+    this.speed = 3;
     this.d = 0;
 
     this.move = function(){
+				
         if(this.coefX < this.coefY){
             this.x += this.speed * this.sx * this.coefX;
             this.y += this.speed * this.sy;
