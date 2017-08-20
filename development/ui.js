@@ -3,6 +3,7 @@ function UI(tilemap, context){
     this.height = 30;
     this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
     this.y = (tilemap.rows - 2) * tilemap.tsize + 5;
+	this.buttons = [];
 
     this.selected = null;	
 	
@@ -23,6 +24,7 @@ function UI(tilemap, context){
 
     this.deselect = function(){
         this.selected = null;
+		this.buttons = [];
         console.log(this.selected);
     };
 
@@ -53,8 +55,16 @@ function UI(tilemap, context){
 	
 	this.drawButtons = function(buttons){
 		for(var i = 0; i < buttons.length; i++){
-			context.drawImage(document.getElementById('button-' + buttons[i]), this.x + this.width + i * 35 + 5, this.y);
+			var btn = new Button(buttons[i], [this.x + this.width + i * 35 + 5, this.y]);
+			this.buttons.push(btn);
+			context.drawImage(btn.texture, btn.x, btn.y);
 		}
-	};
-    
+	};    
 };
+
+function Button(type, spawnPoint){
+	this.x = spawnPoint[0];
+	this.y = spawnPoint[1];
+	this.type = type;
+	this.texture = document.getElementById('button-' + type);
+}
