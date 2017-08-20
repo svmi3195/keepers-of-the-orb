@@ -5,6 +5,7 @@ function ObjectsManager(context, tilemap){
     this.staticObjects = [];
     this.movingParticles = [];
     this.autoShooters = [];
+	this.explosions = [];
 
     this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
@@ -102,11 +103,12 @@ function ObjectsManager(context, tilemap){
                 removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].terrain == 'mountains'){
-                //add explosions!
+                this.spawnObject(Explosion, [particle.x - 20 - 4, particle.y - 20 - 4]);
+				
                 removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
             }else if(tilemap.tiles[tile].object.length !=0 && (tilemap.tiles[tile].object[0].name == 'Menhir' || tilemap.tiles[tile].object[0].name == 'Stone')){
-                //add explosions!
+                this.spawnObject(Explosion, [particle.x - 20 - 4, particle.y - 20 - 4]);
                 removeFromArray(this.objects, particle);
                 this.movingParticles.splice(j, 1);                
             }else if(Math.abs(particle.x - particle.goalX) < 3 &&
@@ -117,6 +119,7 @@ function ObjectsManager(context, tilemap){
                 for(var i = this.movingObjects.length - 1; i >= 0; i--){
                     var obj = this.movingObjects[i];
                     if(obj.name == 'Enemy' && rectsCollision(obj, particle)){
+						this.spawnObject(Explosion, [particle.x - 20 - 4, particle.y - 20 - 4]);
                         particle.shooter.frags++;
                         removeFromArray(this.objects, obj);
                         removeFromArray(this.movingObjects, obj);
@@ -125,7 +128,6 @@ function ObjectsManager(context, tilemap){
                     }
                 }
             }
-
             if(particle){
                 particle.move(); 
             }
@@ -192,6 +194,25 @@ function ObjectsManager(context, tilemap){
             }
         }                
     };
+	
+	this.processExplosions = function(){
+		if(this.explosions.length == 0){
+			return 0;
+		}
+		
+		for(var i = 0; i < this.explosions.length; i++){
+			var explosion = this.explosions[i];
+			if(Date.now() - explosion.frameTime > 50 && explosion.frame == explosion.textures.length){
+				//delete finished explosion
+				removeFromArray(this.objects, explosion);
+				this.explosions.splice(i, 1);
+			}else if(Date.now() - explosion.frameTime > 50){
+				explosion.texture = explosion.textures[explosion.frame];
+				explosion.frame++;
+				explosion.frameTime = Date.now();
+			}
+		}
+	};
 
     this.spawnObject = function(Constructor, spawnPoint, goal, shooter){
 

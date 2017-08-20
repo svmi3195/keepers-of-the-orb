@@ -75,7 +75,8 @@ function runGame(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
                
         tilemap.render();
-        objectsManager.processShooters();     
+        objectsManager.processShooters();
+		objectsManager.processExplosions();
 
         objectsManager.moveAll();        
         objectsManager.renderAll();

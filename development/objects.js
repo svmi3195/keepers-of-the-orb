@@ -154,6 +154,22 @@ function Projectile(fromPos, toPos){
     
 };
 
+function Explosion(spawnPoint){
+	this.frameTime = Date.now();
+	this.frame = 0;
+	this.x = spawnPoint[0];
+    this.y = spawnPoint[1];
+	this.textures = [];
+	for(var i = 1; i <=10; i++){
+		this.textures.push(document.getElementById('explosion-' + i));
+	}
+	this.texture = this.textures[this.frame];
+	this.width = this.texture.width;
+    this.height = this.texture.height;
+    this.tags = ['objects', 'explosions'];	
+	
+};
+
 function Menhir(spawnPoint){
     this.index;
     this.texture = document.getElementById('menhir-' + (Math.floor(Math.random() * 1) + 1)); //multply by textures count
