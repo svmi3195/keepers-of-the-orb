@@ -1,11 +1,11 @@
 function UI(tilemap, context){
-    this.width = 500;
-    this.height = tilemap.tsize;
+    this.width = 100;
+    this.height = 30;
     this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
-    this.y = (tilemap.rows - 2) * tilemap.tsize;
+    this.y = (tilemap.rows - 2) * tilemap.tsize + 5;
 
-    this.selected = null;
-
+    this.selected = null;	
+	
     this.themes = [{id: 0, name: 'black-golden', colors: ['#1a1a00', '#D4AF37']}, 
                    {id: 1, name: 'black-silver', colors: ['#1a1a1a', '#c0c0c0']},
                    {id: 2, name: 'black-purple', colors: ['#1a0033', '#bb33ff']}];
@@ -34,19 +34,27 @@ function UI(tilemap, context){
         context.strokeRect(this.x, this.y, this.width, this.height);
 
         if(this.selected){
-            var text = this.selected.name;
-            if(this.selected.hasOwnProperty('frags')){
-                text += ', frags count: ' + this.selected.frags;
-            }
+            var text = this.selected.name;            
             this.drawText(text);
+			
+			if(this.selected.name == 'Mage'){
+				this.drawButtons(['shoot', 'go', 'rune']);
+			}
         }
         
+		
     };
 
     this.drawText = function(text){
         context.fillStyle = this.mainColor;
         context.font = '20px serif';
-        context.fillText(text, this.x + 10, this.y + 25);
+        context.fillText(text, this.x + 10, this.y + 22);
     };
+	
+	this.drawButtons = function(buttons){
+		for(var i = 0; i < buttons.length; i++){
+			context.drawImage(document.getElementById('button-' + buttons[i]), this.x + this.width + i * 35 + 5, this.y);
+		}
+	};
     
 };

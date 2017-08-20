@@ -96,6 +96,19 @@ function Orb(spawnPoint){
     this.frags = 0;
 };
 
+function Rune(spawnPoint){
+    this.index;
+    this.texture = document.getElementById('rune-1');
+    this.tags = ['objects', 'runes'];
+    this.tileOffsetY = 0;
+    this.x = spawnPoint[0];
+    this.y = spawnPoint[1] - this.tileOffsetY;
+    this.width = this.texture.width;
+    this.height = this.texture.height;    
+    this.name = 'Rune';
+    this.blocking = true;
+};
+
 function Projectile(fromPos, toPos){
 	this.name = 'Projectile';
 	this.textures = [];

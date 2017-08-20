@@ -89,7 +89,7 @@ function ObjectsManager(context, tilemap){
 
     this.moveAll = function(){        
         for(var i = 0; i < this.movingObjects.length; i++){
-            if(this.movingObjects[i].path.length > 0){
+            if(this.movingObjects[i].path && this.movingObjects[i].path.length > 0){
                 this.moveObj(this.movingObjects[i]);
             }
         }

@@ -52,12 +52,15 @@ function runGame(){
                     }
                 }
             }
-            if(ui.selected && ui.selected.name == 'Mage'){//same code for other objects movable by player
+            if(ui.selected && ui.selected.name == 'Mage' && !tilemap.tiles[clickedTile].blocked){//same code for other objects movable by player
                 ui.selected.waypoints.push(clickedTile);
                 if(ui.selected.waypoints.length == 2){
                     ui.selected.path = findPath(tilemap, ui.selected.waypoints[0], ui.selected.waypoints[1]);
-                    ui.selected.path.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
-                    ui.selected.waypoints.shift();
+					if(ui.selected.path){
+						ui.selected.path.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
+						ui.selected.waypoints.shift();
+					}
+                    
                 } 
             }
         } 
