@@ -81,7 +81,7 @@ function Orb(spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
-    this.texture = document.getElementById('orb-2');
+    this.texture = document.getElementById('orb-1');
     this.width = this.texture.width;
     this.height = this.texture.height;
     this.blocking = true;
@@ -90,6 +90,7 @@ function Orb(spawnPoint){
 
     this.lastTimeShoot = 0;
     this.readyToShoot = true;
+	this.animateShooting = false;
 
     this.name = 'The orb';
     this.tags = ['objects', 'autoShooters'];

@@ -157,41 +157,59 @@ function ObjectsManager(context, tilemap){
             var obj = this.autoShooters[i];
 
             //check readyness
-            if(!obj.readyToShoot){
-                if(Date.now() - obj.lastTimeShoot < 3000){
-                    return -1;
-                }else{
-                    obj.readyToShoot = true;
-                }
+            if(!obj.readyToShoot && Date.now() - obj.lastTimeShoot > 3000){
+                obj.readyToShoot = true;                
             };
+			
+			//shooting
+			if(obj.readyToShoot == true){
+				var enemyNames = [];
+				if(obj.name == 'The orb'){
+					enemyNames.push('Enemy');
+				}else if(obj.name == 'Enemy'){
+					enemyNames.push('The orb');
+					enemyNames.push('Mage');
+				};
 
-            var enemyNames = [];
-            if(obj.name == 'The orb'){
-                enemyNames.push('Enemy');
-            }else if(obj.name == 'Enemy'){
-                enemyNames.push('The orb');
-                enemyNames.push('Mage');
-            };
+				var objSightField = {
+					x: obj.x - obj.shootingRange,
+					y: obj.y - obj.shootingRange,
+					width: obj.width + obj.shootingRange,
+					height: obj.height + obj.shootingRange,
+				};
 
-            var objSightField = {
-                x: obj.x - obj.shootingRange,
-                y: obj.y - obj.shootingRange,
-                width: obj.width + obj.shootingRange,
-                height: obj.height + obj.shootingRange,
-            };
+				var target = null;
 
-            var target = null;
+				for(var j = this.movingObjects.length - 1; j >= 0; j--){
+					var moving = this.movingObjects[j];
+					if(rectsCollision(moving, objSightField) && enemyNames.includes(moving.name)){
+						target = moving;    
+					}
+				}
 
-            for(var j = this.movingObjects.length - 1; j >= 0; j--){
-                var moving = this.movingObjects[j];
-                if(rectsCollision(moving, objSightField) && enemyNames.includes(moving.name)){
-                    target = moving;    
-                }
-            }
-
-            if(target){
-                this.shoot(obj, [target.x + Math.floor(target.width / 2), target.y + Math.floor(target.height / 2)]);
-            }
+				if(target){
+					this.shoot(obj, [target.x + Math.floor(target.width / 2), target.y + Math.floor(target.height / 2)]);
+					
+					//start shooting animations
+					obj.animateShooting = true;
+					if(obj.name == 'The orb'){
+						obj.texture = document.getElementById('orb-2');
+					}
+				}
+			}//end of shooting block
+			
+			//process shooting animations
+			if(obj.animateShooting && Date.now() - obj.lastTimeShoot < 100){
+				//might make universal method when have more shooters
+				if(obj.name == 'The orb'){
+					obj.texture = document.getElementById('orb-2');
+				}				
+			}else if(obj.animateShooting){
+				obj.animateShooting = false;
+				if(obj.name == 'The orb'){
+					obj.texture = document.getElementById('orb-1');
+				}
+			}//end of process animations
         }                
     };
 	
