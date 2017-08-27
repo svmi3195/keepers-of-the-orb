@@ -147,11 +147,7 @@ function ObjectsManager(context, tilemap){
     };
 
     this.processShooters = function(){
-
-        if(this.autoShooters.length == 0){
-            return -1;
-        }
-
+        
         for(var i = 0; i < this.autoShooters.length; i++){
 
             var obj = this.autoShooters[i];
@@ -192,23 +188,14 @@ function ObjectsManager(context, tilemap){
 					
 					//start shooting animations
 					obj.animateShooting = true;
-					if(obj.name == 'The orb'){
-						obj.texture = document.getElementById('orb-2');
-					}
+					obj.texture = document.getElementById(obj.texture.id + '-shooting');
 				}
 			}//end of shooting block
 			
 			//process shooting animations
-			if(obj.animateShooting && Date.now() - obj.lastTimeShoot < 100){
-				//might make universal method when have more shooters
-				if(obj.name == 'The orb'){
-					obj.texture = document.getElementById('orb-2');
-				}				
-			}else if(obj.animateShooting){
+			if(obj.animateShooting && Date.now() - obj.lastTimeShoot > 200){
 				obj.animateShooting = false;
-				if(obj.name == 'The orb'){
-					obj.texture = document.getElementById('orb-1');
-				}
+				obj.texture = document.getElementById(obj.texture.id.slice(0, obj.texture.id.indexOf('-shooting')));
 			}//end of process animations
         }                
     };
