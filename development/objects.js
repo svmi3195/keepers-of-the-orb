@@ -81,7 +81,7 @@ function Orb(spawnPoint){
     this.x = spawnPoint[0];
     this.y = spawnPoint[1];
     this.tileOffsetY = 0;
-    this.texture = document.getElementById('orb-1');
+    this.texture = document.getElementById('orb-2');
     this.width = this.texture.width;
     this.height = this.texture.height;
     this.blocking = true;
