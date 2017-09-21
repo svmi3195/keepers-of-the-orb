@@ -5,7 +5,15 @@ function ObjectsManager(context, tilemap){
     this.staticObjects = [];
     this.movingParticles = [];
     this.autoShooters = [];
-	this.explosions = [];
+    this.explosions = [];
+    
+    this.entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+    this.magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
+    this.orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
+
+    this.entranceIndex = transIndex2to1([this.entrancePos[0]  / tilemap.tsize, this.entrancePos[1] / tilemap.tsize], tilemap);
+    this.orbIndex = transIndex2to1([this.orbPos[0]  / tilemap.tsize, this.orbPos[1] / tilemap.tsize], tilemap);
+    this.mageIndex = transIndex2to1([this.magePos[0]  / tilemap.tsize, this.magePos[1] / tilemap.tsize], tilemap);
 
     this.renderObject = function(object){
         context.drawImage(object.texture, object.x, object.y);
@@ -221,13 +229,14 @@ function ObjectsManager(context, tilemap){
 
     this.spawnObject = function(Constructor, spawnPoint, goal, shooter){
 
-        var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
-        var magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
-        var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
-
-        if(Constructor == Enemy){
-            spawnPoint = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
+        if(Constructor == Mage){
+            spawnPoint = this.magePos;
+        }else if(Constructor == Orb){
+            spawnPoint = this.orbPos;
+        }else if(Constructor == Enemy){
+            spawnPoint = this.entrancePos;
         }
+
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
         var obj = new Constructor(spawnPoint, goal);
@@ -245,13 +254,13 @@ function ObjectsManager(context, tilemap){
             //later may add paths to diagonals; maybe later rewrite using tilemap info
             var paths = [];
             //path to tile before orb
-            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize - 1, orbPos[1] / tilemap.tsize], tilemap)));
+            paths.push(findPath(tilemap, transIndex2to1([this.entrancePos[0]  / tilemap.tsize, this.entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([this.orbPos[0]  / tilemap.tsize - 1, this.orbPos[1] / tilemap.tsize], tilemap)));
             //path to tile above orb
-            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize - 1], tilemap)));
+            paths.push(findPath(tilemap, transIndex2to1([this.entrancePos[0]  / tilemap.tsize, this.entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([this.orbPos[0]  / tilemap.tsize, this.orbPos[1] / tilemap.tsize - 1], tilemap)));
             //path to tile beneath orb
-            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize + 1], tilemap)));
+            paths.push(findPath(tilemap, transIndex2to1([this.entrancePos[0]  / tilemap.tsize, this.entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([this.orbPos[0]  / tilemap.tsize, this.orbPos[1] / tilemap.tsize + 1], tilemap)));
             //path to tile after orb
-            paths.push(findPath(tilemap, transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([orbPos[0]  / tilemap.tsize + 1, orbPos[1] / tilemap.tsize], tilemap)));
+            paths.push(findPath(tilemap, transIndex2to1([this.entrancePos[0]  / tilemap.tsize, this.entrancePos[1] / tilemap.tsize], tilemap), transIndex2to1([this.orbPos[0]  / tilemap.tsize + 1, this.orbPos[1] / tilemap.tsize], tilemap)));
 
             paths.sort(function(a,b){
                 return a.length - b.length
@@ -272,12 +281,34 @@ function ObjectsManager(context, tilemap){
         
     };//end of spawnObject
 
+    this.checkMap = function(i){
+        tilemap.tiles[this.orbIndex].blocked = false;
+        tilemap.tiles[i].blocked = true;
+
+        var clear = true;
+        if(i == this.entranceIndex){
+            clear = false;
+        }else if(i == this.orbIndex){
+            clear = false;
+        }else if(i == this.mageIndex){
+            clear = false;
+        }else if(!findPath(tilemap, this.entranceIndex, this.orbIndex)){
+            clear = false;
+        }        
+
+        tilemap.tiles[this.orbIndex].blocked = true;
+        tilemap.tiles[i].blocked = false;
+        return clear;
+    };//end of checkpath
+
     this.createMenhirs = function(){
         for(var i = 0; i < tilemap.tiles.length; i++){
             if(!tilemap.tiles[i].blocked){
-                if(Math.random() < 0.05){
-                    var spawnIndex = transIndex1to2(i, tilemap);                    
-                    this.spawnObject(Menhir, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
+                if(Math.random() < 0.05){                    
+                    if(this.checkMap(i)){
+                        var spawnIndex = transIndex1to2(i, tilemap);
+                        this.spawnObject(Menhir, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]); 
+                    }                  
                 }
             }
         }
@@ -286,9 +317,11 @@ function ObjectsManager(context, tilemap){
     this.createStones = function(){
         for(var i = 0; i < tilemap.tiles.length; i++){
             if(!tilemap.tiles[i].blocked){
-                if(Math.random() < 0.05){
-                    var spawnIndex = transIndex1to2(i, tilemap);
-                    this.spawnObject(Stone, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]);
+                if(Math.random() < 0.05){                    
+                    if(this.checkMap(i)){
+                        var spawnIndex = transIndex1to2(i, tilemap);
+                        this.spawnObject(Stone, [spawnIndex[0] * tilemap.tsize, spawnIndex[1] * tilemap.tsize]); 
+                    }
                 }
             }
         }

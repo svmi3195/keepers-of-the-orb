@@ -16,15 +16,8 @@ function runGame(){
 
     var ui = new UI(tilemap, ctx);
 
-    var entrancePos = [0, Math.floor(tilemap.rows/2) * tilemap.tsize];
-    var magePos = [1 * tilemap.tsize, (Math.floor(tilemap.rows/2) - 1) * tilemap.tsize];
-    var orbPos = [(tilemap.cols - 4) * tilemap.tsize, Math.floor(tilemap.rows/2) * tilemap.tsize];
-
-    var orbIndex = transIndex2to1([orbPos[0]  / tilemap.tsize, orbPos[1] / tilemap.tsize], tilemap);
-    var entranceIndex = transIndex2to1([entrancePos[0]  / tilemap.tsize, entrancePos[1] / tilemap.tsize], tilemap);
-
-    objectsManager.spawnObject(Mage, magePos);
-    objectsManager.spawnObject(Orb, orbPos);
+    objectsManager.spawnObject(Mage);
+    objectsManager.spawnObject(Orb);
     objectsManager.createStones();
     objectsManager.createMenhirs();
     //objectsManager.createTests();
