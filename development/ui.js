@@ -41,7 +41,7 @@ function UI(tilemap, context){
 			
 			if(this.selected.name == 'Mage' && this.buttons.length == 0){
 				this.createButtons(['shoot', 'go', 'rune']);
-			}else if (this.selected.name != 'Mage'){
+			}else if(this.selected.name != 'Mage'){
 				this.buttons = [];
 			}
         }
@@ -68,7 +68,22 @@ function UI(tilemap, context){
 		for(var i = 0; i < this.buttons.length; i++){
 			context.drawImage(this.buttons[i].texture, this.buttons[i].x, this.buttons[i].y);
 		}
-	}
+    }
+    
+    this.btnPressed = function(btn){
+        switch(btn.type){
+            case 'shoot':
+                this.buttons = [];
+                this.createButtons(['fire', 'magic', 'x']);
+                break;
+            case 'x':
+                this.buttons = [];
+                if(this.selected.name == 'Mage'){
+                    this.createButtons(['shoot', 'go', 'rune']);
+                }
+                break;
+        }
+    }
 };
 
 function Button(type, spawnPoint){    
@@ -78,5 +93,5 @@ function Button(type, spawnPoint){
 	this.width = this.texture.width;
     this.height = this.texture.height;
     this.type = type;
-    this.name = 'btn: ' + this.type;	
+    this.name = 'btn: ' + this.type;
 }
