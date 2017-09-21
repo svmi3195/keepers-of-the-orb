@@ -17,6 +17,7 @@ function UI(tilemap, context){
         if(obj == this.selected){
             this.deselect();
         }else{
+            this.deselect();
             this.selected = obj;
             console.log(this.selected);
         }        
@@ -25,7 +26,6 @@ function UI(tilemap, context){
     this.deselect = function(){
         this.selected = null;
 		this.buttons = [];
-        console.log(this.selected);
     };
 
     this.render = function(){
@@ -41,8 +41,10 @@ function UI(tilemap, context){
 			
 			if(this.selected.name == 'Mage' && this.buttons.length == 0){
 				this.createButtons(['shoot', 'go', 'rune']);
-			}else if(this.selected.name != 'Mage'){
-				this.buttons = [];
+			}else if(this.selected.name == 'The orb' && this.buttons.length == 0){
+				this.createButtons(['shoot', 'i']);
+			}else if(this.selected.name && this.buttons.length == 0){
+				this.createButtons(['i']);
 			}
         }
 		
@@ -79,7 +81,7 @@ function UI(tilemap, context){
             case 'x':
                 this.buttons = [];
                 if(this.selected.name == 'Mage'){
-                    this.createButtons(['shoot', 'go', 'rune']);
+                    this.createButtons(['shoot', 'i', 'go', 'rune']);
                 }
                 break;
         }

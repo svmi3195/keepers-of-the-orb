@@ -45,16 +45,19 @@ function runGame(){
         }else{//if object or button selected
             if(tilemap.tiles[clickedTile].object.length != 0){//check if static object selected
                 ui.select(tilemap.tiles[clickedTile].object[0]);
-            }else if(ui.buttons.length > 0){//check if button pressed
-                for(var i = 0; i < ui.buttons.length; i++){
-                    if (rectPointCollision(ui.buttons[i], {x: xClicked, y: yClicked})){
-                        ui.btnPressed(ui.buttons[i]);
+            }else{
+                if(ui.buttons.length > 0){//check if button pressed
+                    for(var i = 0; i < ui.buttons.length; i++){
+                        if (rectPointCollision(ui.buttons[i], {x: xClicked, y: yClicked})){
+                            ui.btnPressed(ui.buttons[i]);
+                        }
                     }
                 }
-            }else if(objectsManager.movingObjects.length !=0){//check if moving object selected
-                for(var i = 0; i < objectsManager.movingObjects.length; i++){
-                    if(rectPointCollision(objectsManager.movingObjects[i], {x: xClicked, y: yClicked})){
-                        ui.select(objectsManager.movingObjects[i]);
+                if(objectsManager.movingObjects.length !=0){//check if moving object selected
+                    for(var i = 0; i < objectsManager.movingObjects.length; i++){
+                        if(rectPointCollision(objectsManager.movingObjects[i], {x: xClicked, y: yClicked})){
+                            ui.select(objectsManager.movingObjects[i]);
+                        }
                     }
                 }
             }            
