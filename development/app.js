@@ -40,36 +40,37 @@ function runGame(){
         var clickedTile = transIndex2to1([Math.floor(xClicked/tilemap.tsize), Math.floor(yClicked/tilemap.tsize)], tilemap);
         console.log(tilemap.tiles[clickedTile]);
 
-        if(event.ctrlKey){
+        if(event.ctrlKey){//if ctrl pressed - shoot
             objectsManager.shoot(objectsManager.keepers[0], [xClicked,yClicked]); //can later change to selected keeper, if add more
-        }else{
-            if(tilemap.tiles[clickedTile].object.length != 0){
+        }else{//if object or button selected
+            if(tilemap.tiles[clickedTile].object.length != 0){//check if static object selected
                 ui.select(tilemap.tiles[clickedTile].object[0]);
-            }else if(objectsManager.movingObjects.length !=0){
+            }else if(ui.buttons.length > 0){//check if button selected
+                for(var i = 0; i < ui.buttons.length; i++){
+                    if (rectPointCollision(ui.buttons[i], {x: xClicked, y: yClicked})){
+                        ui.select(ui.buttons[i])
+                    }
+                }
+            }else if(objectsManager.movingObjects.length !=0){//check if moving object selected
                 for(var i = 0; i < objectsManager.movingObjects.length; i++){
                     if(rectPointCollision(objectsManager.movingObjects[i], {x: xClicked, y: yClicked})){
                         ui.select(objectsManager.movingObjects[i]);
                     }
                 }
-            }
-            if(ui.selected && ui.selected.name == 'Mage' && !tilemap.tiles[clickedTile].blocked){//same code for other objects movable by player
+            }            
+        }
+        
+        //mage moving
+        if(!event.ctrlKey && ui.selected && ui.selected.name == 'Mage' && !tilemap.tiles[clickedTile].blocked){//same code for other objects movable by player
                 ui.selected.waypoints.push(clickedTile);
                 if(ui.selected.waypoints.length == 2){
                     ui.selected.path = findPath(tilemap, ui.selected.waypoints[0], ui.selected.waypoints[1]);
 					if(ui.selected.path){
 						ui.selected.path.shift();//prolly should not shift but fix pathfinder: wtf it returns start at head and tail
 						ui.selected.waypoints.shift();
-					}
-                    
-                } 
-            }else if(ui.selected && ui.selected.name == 'Mage'){
-				for(var i = 0; i < ui.buttons.length; i++){
-                    if(rectPointCollision(ui.buttons[i], {x: xClicked, y: yClicked})){
-                        console.log(ui.buttons[i].type)
-                    }
-                }
-			}
-        } 
+					}                    
+            } 
+        }
         
     };//end of mouse clickHandler
 

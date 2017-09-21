@@ -71,11 +71,12 @@ function UI(tilemap, context){
 	}
 };
 
-function Button(type, spawnPoint){
+function Button(type, spawnPoint){    
 	this.texture = document.getElementById('button-' + type);
 	this.x = spawnPoint[0];
 	this.y = spawnPoint[1];
 	this.width = this.texture.width;
     this.height = this.texture.height;
-	this.type = type;	
+    this.type = type;
+    this.name = 'btn: ' + this.type;	
 }
