@@ -14,7 +14,7 @@ function runGame(){
 
     var objectsManager = new ObjectsManager(ctx, tilemap);
 
-    var ui = new UI(tilemap, ctx);
+    var ui = new UI(tilemap, ctx, canvas);
 
     objectsManager.spawnObject(Mage);
     objectsManager.spawnObject(Orb);

@@ -1,4 +1,4 @@
-function UI(tilemap, context){
+function UI(tilemap, context, canvas){
     this.width = 100;
     this.height = 30;
     this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
@@ -10,7 +10,7 @@ function UI(tilemap, context){
     this.showingInventory = false;
     
     //later store user-defined coords (by dragging)
-    this.infoCoords = {x: 10, y: 10};
+    this.infoCoords = {x: canvas.width - 300 - 10, y: 10};//300 - screen width
     this.inventoryCoords = {x: 10, y: 10};
 	
     this.themes = [{id: 0, name: 'black-golden', colors: ['#1a1a00', '#D4AF37']}, 
@@ -48,7 +48,7 @@ function UI(tilemap, context){
             this.drawText(text);
 			
 			if(this.selected.name == 'Mage' && this.buttons.length == 0){
-				this.createButtons(['shoot', 'go', 'rune']);
+				this.createButtons(['shoot', 'i', 'go', 'rune']);
 			}else if(this.selected.name == 'The orb' && this.buttons.length == 0){
 				this.createButtons(['shoot', 'i']);
 			}else if(this.selected.name && this.buttons.length == 0){
@@ -78,14 +78,32 @@ function UI(tilemap, context){
     };
 
     this.drawInfoScreen = function(){
+        var x = this.infoCoords.x;
+        var y = this.infoCoords.y;
         var width = 300;
         var height = 300;
 
-        context.fillStyle = this.backgroundColor;
-        context.fillRect(this.infoCoords.x, this.infoCoords.y, width, height);
+        var fontSize = 20;
+        var margin = 10;
+        var obj = this.selected;
+
+        context.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        context.fillRect(x, y, width, height);
         context.strokeStyle = this.mainColor;
         context.lineWidth = 3;
-        context.strokeRect(this.infoCoords.x, this.infoCoords.y, width, height);
+        context.strokeRect(x, y, width, height);
+
+        context.fillStyle = this.mainColor;
+        context.font = fontSize + 'px serif';
+        context.fillText(obj.name, x + margin, y + fontSize);
+
+        if(obj.hasOwnProperty('hitpoints')){
+            context.fillText('Hitpoints: ' + obj.hitpoints, x + margin, y + fontSize * 2);
+        }
+        if(obj.hasOwnProperty('frags')){
+            context.fillText('Enemies killed: ' + obj.frags, x + margin, y + fontSize * 3);
+        }
+        
     };
 
     this.createButtons = function(buttons){
