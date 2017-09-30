@@ -197,6 +197,8 @@ function Menhir(spawnPoint){
     this.sleeping = true;
     this.blocking = true;
     this.double = false;
+
+    this.awakensWith = ['nature', 'blood'];//grass, blooddrop
 };
 
 function Stone(spawnPoint){

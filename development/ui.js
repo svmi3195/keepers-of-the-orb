@@ -51,6 +51,8 @@ function UI(tilemap, context, canvas){
 				this.createButtons(['shoot', 'i', 'go', 'rune']);
 			}else if(this.selected.name == 'The orb' && this.buttons.length == 0){
 				this.createButtons(['shoot', 'i']);
+			}else if(this.selected.name == 'Menhir' && this.buttons.length == 0){
+				this.createButtons(['i', 'awaken']);
 			}else if(this.selected.name && this.buttons.length == 0){
 				this.createButtons(['i']);
 			}
@@ -107,7 +109,7 @@ function UI(tilemap, context, canvas){
 
         showProp('Hitpoints: ', 'hitpoints');
         showProp('Enemies killed: ', 'frags');
-        showProp('Attacks with ', 'attacksWith');
+        showProp('Attacks type: ', 'attacksWith');
         showProp('Sleeping: ', 'sleeping');
     };    
 
@@ -142,6 +144,10 @@ function UI(tilemap, context, canvas){
             case 'light':
             case 'dark':
                 this.selected.attacksWith = btn.type;
+                break;
+            case 'awaken':
+                this.buttons = [];
+                this.createButtons(this.selected.awakensWith.concat('x'));
                 break;
         }
     }
