@@ -9,12 +9,14 @@ function runGame(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    var world = new World();
+
     var tilemap = new Tilemap(canvas, ctx);
     tilemap.populate();
 
     var objectsManager = new ObjectsManager(ctx, tilemap);
 
-    var ui = new UI(tilemap, ctx, canvas);
+    var ui = new UI(world, tilemap, ctx, canvas);
 
     objectsManager.spawnObject(Mage);
     objectsManager.spawnObject(Orb);

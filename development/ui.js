@@ -1,4 +1,4 @@
-function UI(tilemap, context, canvas){
+function UI(world, tilemap, context, canvas){
     this.width = 100;
     this.height = 30;
     this.x = tilemap.cols * tilemap.tsize / 2 - this.width / 2;
