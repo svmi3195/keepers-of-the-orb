@@ -97,14 +97,19 @@ function UI(tilemap, context, canvas){
         context.font = fontSize + 'px serif';
         context.fillText(obj.name, x + margin, y + fontSize);
 
-        if(obj.hasOwnProperty('hitpoints')){
-            context.fillText('Hitpoints: ' + obj.hitpoints, x + margin, y + fontSize * 2);
-        }
-        if(obj.hasOwnProperty('frags')){
-            context.fillText('Enemies killed: ' + obj.frags, x + margin, y + fontSize * 3);
-        }
-        
-    };
+        var lines = 1;
+        function showProp(text, property){
+            if(obj.hasOwnProperty(property)){
+                lines++;
+                context.fillText(text + obj[property], x + margin, y + fontSize * lines);
+            }
+        };
+
+        showProp('Hitpoints: ', 'hitpoints');
+        showProp('Enemies killed: ', 'frags');
+        showProp('Attacks with ', 'attacksWith');
+        showProp('Sleeping: ', 'sleeping');
+    };    
 
     this.createButtons = function(buttons){
 		for(var i = 0; i < buttons.length; i++){

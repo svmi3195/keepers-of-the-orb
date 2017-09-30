@@ -60,6 +60,8 @@ function Mage (spawnPoint){
     this.name = 'Mage';
     this.frags = 0;
 
+    this.attacksWith = 'magic';
+
     this.moveRight = function(){
         this.x += this.speed;
     };
@@ -95,6 +97,8 @@ function Orb(spawnPoint){
     this.name = 'The orb';
     this.tags = ['objects', 'autoShooters'];
     this.frags = 0;
+
+    this.attacksWith = 'light';
 };
 
 function Rune(spawnPoint){
@@ -110,20 +114,14 @@ function Rune(spawnPoint){
     this.blocking = true;
 };
 
-function Projectile(fromPos, toPos){
-	this.name = 'Projectile';
-	this.textures = [];
-	this.textures.push(document.getElementById('projectile-fire-1'));
-	this.textures.push(document.getElementById('projectile-frost-1'));
-	this.textures.push(document.getElementById('projectile-poison-1'));
-	this.textures.push(document.getElementById('projectile-magic-1'));
-	this.textures.push(document.getElementById('projectile-dark-1'));
-	this.textures.push(document.getElementById('projectile-light-1'));
-    this.texture = this.textures[Math.floor(Math.random() * this.textures.length)];
+function Projectile(fromPos, toPos, shooter){
+    this.name = 'Projectile';
+    this.shooter = shooter;
+    this.type = shooter.attacksWith || 'magic';    
+    this.texture = document.getElementById('projectile-' + this.type);
     this.width = this.texture.width;
     this.height = this.texture.height;
-    this.tags = ['objects', 'movingParticles'];
-    this.shooter;
+    this.tags = ['objects', 'movingParticles'];    
     this.tileOffsetY = 0;
     this.blocking = false;
     this.double = false;

@@ -239,7 +239,7 @@ function ObjectsManager(context, tilemap){
 
         var spawnIndex = transIndex2to1([spawnPoint[0]  / tilemap.tsize, spawnPoint[1] / tilemap.tsize], tilemap);
 
-        var obj = new Constructor(spawnPoint, goal);
+        var obj = new Constructor(spawnPoint, goal, shooter);
 
         //if obj takes two tiles, but 2nd tile is blocked, re-roll obj
         while(obj.double && tilemap.tiles[spawnIndex + 1].blocked){
@@ -267,11 +267,7 @@ function ObjectsManager(context, tilemap){
             })
             obj.path = paths[0];
             obj.path.shift();
-        }
-
-        if(Constructor == Projectile){
-            obj.shooter = shooter;
-        }
+        }        
 
         if(Constructor == Menhir || Constructor == Stone || Constructor == Orb){
             this.registerObj(obj, spawnIndex);
