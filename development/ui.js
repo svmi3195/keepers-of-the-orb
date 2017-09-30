@@ -122,7 +122,7 @@ function UI(tilemap, context, canvas){
         switch(btn.type){
             case 'shoot':
                 this.buttons = [];
-                this.createButtons(['fire', 'magic', 'x']);
+                this.createButtons(this.selected.availableAttacks.concat('x'));
                 break;
             case 'x':
                 this.buttons = [];
@@ -136,6 +136,12 @@ function UI(tilemap, context, canvas){
                 }else{
                     this.showingInfo = true;
                 }
+                break;
+            case 'magic':
+            case 'blood':
+            case 'light':
+            case 'dark':
+                this.selected.attacksWith = btn.type;
                 break;
         }
     }

@@ -61,6 +61,7 @@ function Mage (spawnPoint){
     this.frags = 0;
 
     this.attacksWith = 'magic';
+    this.availableAttacks = ['magic', 'blood'];
 
     this.moveRight = function(){
         this.x += this.speed;
@@ -99,6 +100,7 @@ function Orb(spawnPoint){
     this.frags = 0;
 
     this.attacksWith = 'light';
+    this.availableAttacks = ['light', 'dark'];
 };
 
 function Rune(spawnPoint){
