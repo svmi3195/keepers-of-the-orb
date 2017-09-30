@@ -149,6 +149,10 @@ function UI(tilemap, context, canvas){
                 this.buttons = [];
                 this.createButtons(this.selected.awakensWith.concat('x'));
                 break;
+            case 'grass':
+            case 'mageblood':
+                this.selected.awaken(btn.type);
+                break;
         }
     }
 };

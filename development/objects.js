@@ -186,7 +186,7 @@ function Explosion(spawnPoint){
 
 function Menhir(spawnPoint){
     this.index;
-    this.texture = document.getElementById('menhir-' + (Math.floor(Math.random() * 1) + 1)); //multply by textures count
+    this.texture = document.getElementById('menhir-1');
     this.tags = ['objects', 'staticObjects'];
     this.tileOffsetY = 40;
     this.x = spawnPoint[0];
@@ -197,8 +197,24 @@ function Menhir(spawnPoint){
     this.sleeping = true;
     this.blocking = true;
     this.double = false;
+    this.attacksWith = null;
 
-    this.awakensWith = ['nature', 'blood'];//grass, blooddrop
+    this.awakensWith = ['grass', 'mageblood'];
+
+    this.awaken = function(awakeningSource){
+        this.sleeping = false;
+        //also make it autoshooter
+
+        switch(awakeningSource){
+            case 'mageblood':
+                this.texture = document.getElementById('menhir-red');
+                break;
+            case 'grass':
+                this.texture = document.getElementById('menhir-green');
+                break;    
+        }
+
+    }
 };
 
 function Stone(spawnPoint){
