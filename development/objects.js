@@ -17,24 +17,24 @@ function Enemy (spawnPoint){
     this.readyToShoot = true;
 
     this.name = 'Enemy';
-    this.tags = ['objects', 'movingObjects'];
+    this.tags = ['objects', 'movingObjects'];    
+};
 
-    this.moveRight = function(){
+Enemy.prototype.moveRight = function(){
         this.x += this.speed;
     };
 
-    this.moveLeft = function(){
+Enemy.prototype.moveLeft = function(){
         this.x -= this.speed;
     };
 
-    this.moveUp = function(){
+Enemy.prototype.moveUp = function(){
         this.y -= this.speed;
     };
 
-    this.moveDown = function(){
+Enemy.prototype.moveDown = function(){
         this.y += this.speed;
     };
-};
 
 function Mage (spawnPoint){
     this.index;
@@ -61,22 +61,24 @@ function Mage (spawnPoint){
     this.frags = 0;
 
     this.attacksWith = 'magic';
-    this.availableAttacks = ['magic', 'blood'];
+    this.availableAttacks = ['magic', 'blood'];        
+};
 
-    this.moveRight = function(){
+Mage.prototype.moveRight = function(){
         this.x += this.speed;
     };
-    this.moveLeft = function(){
+
+Mage.prototype.moveLeft = function(){
         this.x -= this.speed;
     };
-    this.moveUp = function(){
+
+Mage.prototype.moveUp = function(){
         this.y -= this.speed;
     };
-    this.moveDown = function(){
+
+Mage.prototype.moveDown = function(){
         this.y += this.speed;
     };
-    
-};
 
 function Orb(spawnPoint){
     this.index;
@@ -148,24 +150,22 @@ function Projectile(fromPos, toPos, shooter){
     this.coefY = Math.abs(this.dy / this.dx);
 
     this.speed = 3;
-    this.d = 0;
+    this.d = 0;    
+};
 
-    this.move = function(){
-				
-        if(this.coefX < this.coefY){
-            this.x += this.speed * this.sx * this.coefX;
-            this.y += this.speed * this.sy;
-        }else if(this.coefX > this.coefY){
-            this.x += this.speed * this.sx;
-            this.y += this.speed * this.sy * this.coefY;
-        }else{
-            this.x += this.speed * this.sx;
-            this.y += this.speed * this.sy;
-        }
-
-        this.d += this.speed;
+Projectile.prototype.move = function(){
+    if(this.coefX < this.coefY){
+        this.x += this.speed * this.sx * this.coefX;
+        this.y += this.speed * this.sy;
+    }else if(this.coefX > this.coefY){
+        this.x += this.speed * this.sx;
+        this.y += this.speed * this.sy * this.coefY;
+    }else{
+        this.x += this.speed * this.sx;
+        this.y += this.speed * this.sy;
     }
-    
+
+    this.d += this.speed;
 };
 
 function Explosion(spawnPoint){
@@ -200,8 +200,9 @@ function Menhir(spawnPoint){
     this.attacksWith = null;
 
     this.awakensWith = ['grass', 'mageblood'];
+};
 
-    this.awaken = function(awakeningSource){
+Menhir.prototype.awaken = function(awakeningSource){
         this.sleeping = false;
         //also make it autoshooter
 
@@ -215,7 +216,6 @@ function Menhir(spawnPoint){
         }
 
     }
-};
 
 function Stone(spawnPoint){
     this.index;
