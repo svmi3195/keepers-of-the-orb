@@ -1,51 +1,50 @@
-function Enemy (spawnPoint){
+function MovingObj(x, y, s){
+	this.x = x;
+	this.y = y;
+	this.speed = s;
+}
+
+MovingObj.prototype.moveRight = function(){
+        this.x += this.speed;
+};
+MovingObj.prototype.moveLeft = function(){
+        this.x -= this.speed;
+};
+MovingObj.prototype.moveUp = function(){
+        this.y -= this.speed;
+};
+MovingObj.prototype.moveDown = function(){
+        this.y += this.speed;
+};
+
+function Enemy (spawnPoint){	
+	MovingObj.call(this, spawnPoint[0], spawnPoint[1], 0.5);	
     this.index;
     this.hitpoints = 100;
     this.tileOffsetY = 0;
     this.texture = document.getElementById('enemy-1');
-    this.x = spawnPoint[0];
-    this.y = spawnPoint[1];
     this.width = this.texture.width;
-    this.height = this.texture.height;    
-    this.speed = 0.5;
+    this.height = this.texture.height;  
     this.path = [];
     this.blocking = false;
     this.double = false;
     this.shootingRange = 2;
-
     this.lastTimeShoot = 0;
     this.readyToShoot = true;
-
     this.name = 'Enemy';
     this.tags = ['objects', 'movingObjects'];    
 };
 
-Enemy.prototype.moveRight = function(){
-        this.x += this.speed;
-    };
-
-Enemy.prototype.moveLeft = function(){
-        this.x -= this.speed;
-    };
-
-Enemy.prototype.moveUp = function(){
-        this.y -= this.speed;
-    };
-
-Enemy.prototype.moveDown = function(){
-        this.y += this.speed;
-    };
+Enemy.prototype = Object.create(MovingObj.prototype);
 
 function Mage (spawnPoint){
+	this.tileOffsetY = 20; //sprite height is 60px vs 40px tile
+	MovingObj.call(this, spawnPoint[0], spawnPoint[1] - this.tileOffsetY, 2);
     this.index;
-    this.hitpoints = 300;
-    this.tileOffsetY = 20; //sprite height is 60px vs 40px tile
-    this.x = spawnPoint[0];
-    this.y = spawnPoint[1] - this.tileOffsetY;    
+    this.hitpoints = 300;    
     this.texture = document.getElementById('mage-1');
     this.width = this.texture.width;
     this.height = this.texture.height;
-    this.speed = 2;
     this.waypoints = [];
     this.path = [];
     this.walkingMode = false;
@@ -53,32 +52,15 @@ function Mage (spawnPoint){
     this.tags = ['objects', 'movingObjects', 'keepers'];
     this.blocking = true;
     this.double = false;
-
     this.lastTimeShoot = 0;
     this.readyToShoot = true;
-
     this.name = 'Mage';
     this.frags = 0;
-
     this.attacksWith = 'magic';
     this.availableAttacks = ['magic', 'blood'];        
 };
 
-Mage.prototype.moveRight = function(){
-        this.x += this.speed;
-    };
-
-Mage.prototype.moveLeft = function(){
-        this.x -= this.speed;
-    };
-
-Mage.prototype.moveUp = function(){
-        this.y -= this.speed;
-    };
-
-Mage.prototype.moveDown = function(){
-        this.y += this.speed;
-    };
+Mage.prototype = Object.create(MovingObj.prototype);
 
 function Orb(spawnPoint){
     this.index;
