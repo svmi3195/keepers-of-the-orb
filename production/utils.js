@@ -1,1 +1,0 @@
-function transIndex2to1(n,o){return n[1]*o.cols+n[0]}function transIndex1to2(n,o){return[n%o.cols,Math.floor(n/o.cols)]}function removeFromArray(n,o){for(var r=n.length-1;r>=0;r--)n[r]==o&&n.splice(r,1)}
